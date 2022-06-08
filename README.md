@@ -232,5 +232,38 @@ Confira abaixo todas as opções disponíveis para o hook `useCheckbox`
 | ------------ | ----------- | ------------------------------------------------------------------------------------- |
 | name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
 | optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| initialValue | Não         | Define um valor inicial para o campo (precisa ser obrigatoriamente `true` ou `false`)                                                 |
+| errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
+
+## (useSelect) - Validações de select
+
+Você pode validar select com o hook `useSelect`
+
+```jsx
+import { useSelect } from "lx-react-form";
+
+const example = useSelect({
+  name: "ocupation",
+});
+
+return (
+  <form>
+    <select {...example.selectProps}>
+        <option value="">Selecione uma ocupação</option>
+        <option value="pedreiro">Pedreiro</option>
+        <option value="padeiro">Padeiro</option>
+    </select>
+    {example.error && <p>{example.error}</p>}
+  </form>
+);
+```
+
+Confira abaixo todas as opções disponíveis para o hook `useSelect`
+
+| Opções       | Obrigatório | Descrição                                                                             |
+| ------------ | ----------- | ------------------------------------------------------------------------------------- |
+| name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
 | initialValue | Não         | Define um valor inicial para o campo                                                  |
 | errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
+
