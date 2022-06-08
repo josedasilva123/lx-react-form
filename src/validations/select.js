@@ -7,7 +7,8 @@ import * as React from "react";
  * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useSelect = (props) => {
-    const [value, setValue] = React.useState(initialValue || "");
+    const initialValue = props?.initialValue || "";
+    const [value, setValue] = React.useState(initialValue);
     const [error, setError] = React.useState(null);
   
     function validate() {
@@ -40,7 +41,9 @@ export const useSelect = (props) => {
         error,
       },
       type: "select",
+      value,
       setValue,
+      error,
       setError,
       validate: () => validate(),
     };
