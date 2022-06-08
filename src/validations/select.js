@@ -3,9 +3,11 @@ import * as React from "react";
  * @param {Object} props - Configurações do select
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {string} props.initialValue - Valor inicial (precisa corresponder a uma option)
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useSelect = (props) => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState(initialValue || "");
     const [error, setError] = React.useState(null);
   
     function validate() {

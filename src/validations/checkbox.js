@@ -3,15 +3,17 @@ import * as React from "react";
  * @param {Object} props - Configurações do checkbox
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {boolean} props.initialValue - Valor inicial
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useCheckbox = (props) => {
-  const [value, setValue] = React.useState(false);
+  const [value, setValue] = React.useState(initialValue || false);
   const [error, setError] = React.useState(null);
 
   const validate = () => {
     if (props?.optional) return true;
     if (!value) {
-      setError("Marcar esta caixa é obrigátorio.");
+      setError(props.errorText?.required || "Marcar esta caixa é obrigátorio.");
       return false;
     } else {
       setError(null);
@@ -25,7 +27,7 @@ export const useCheckbox = (props) => {
       setError(null);
     } else {
       setValue(false);
-      setError("Marcar esta caixa é obrigátorio.");
+      setError(props.errorText?.required || "Marcar esta caixa é obrigátorio.");
     }
   };
 
