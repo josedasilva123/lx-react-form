@@ -18,7 +18,7 @@ ou
 yarn add lx-react-form
 ```
 
-##Validações de input (text, email, number) ou textarea
+## Validações de input (text, email, number) ou textarea
 
 Você pode validar esses tipos de campo com o hook `useInput`
 
@@ -39,6 +39,8 @@ return(
 )
 ```
 
+Confira abaixo todas as opções disponíveis para o hook `useInput`
+
 | Opções | Obrigatório | Descrição |
 | ------ | ------ | ------ |
 | name | Sim* | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
@@ -47,12 +49,12 @@ return(
 | same | Não | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder |
 | validation | Não | Utiliza uma validação padrão disponível: email, cep, senha, telefone |
 | customValidation | Não | Permite a utilização de regex próprio para validação |
-| mask | Não | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros
+| mask | Não | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros |
 | customMask | Não | Permite o uso de uma máscara customizada |
 
 | errorText | Não | Permite customizar a mensagens de erro de padrão: `optional`, `same` e `minLength` |
 
-###Exemplo same
+### Exemplo same
 
 ```jsx
 import { useInput } from "lx-react-form"
@@ -78,21 +80,23 @@ return(
 )
 ```
 
-###Exemplo customValidation
+### Exemplo customValidation
 
 ```jsx
 import { useInput } from "lx-react-form"
 
-const example = useInput({
+const password = useInput({
     name: "example",
-    validation: "telefone",
-    mask: "telefone",
+    customValidation: {
+        regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+        error: "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número"
+    }
 })
 
 return(
     <form>
-        <input {...example.inputProps}/>
-        {example.error && <p>{example.error}</p>}
+        <input {...password.inputProps}/>
+        {password.error && <p>{password.error}</p>}
     </form>
 )
 ```
