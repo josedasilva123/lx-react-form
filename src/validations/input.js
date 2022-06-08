@@ -117,13 +117,17 @@ const masks = {
  * @param {Object} props - Configurações do input
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {string} props.initialValue - Valor inicial
  * @param {string} props.validation - Tipo de validação do campo  (email, cep, senha ou telefone)
  * @param {string} props.mask - Máscara do campo (cep, cpf, cnpj, telefone, inteiros)
  * @param {Object} props.customValidation - Validação personalizada, precisa de um regex + error
  * @param {Object} props.customMask - Mascará personalizada, precisa uma lista expressions + clear
+ * @param {string} props.same - Compara o valor de um campo com outro, exigindo que os mesmos correspondam
+ * @param {number} props.minLength - Quatidade de dígitos mínimos necessários
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useInput = (props) => {
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(props?.initialValue || "");
   const [error, setError] = React.useState(null);
 
   const validate = () => {
@@ -131,16 +135,18 @@ export const useInput = (props) => {
 
     //Se campo estiver vazio
     if (value.length === 0) {
-      setError("Preencha um valor.");
+      setError(props.errorText?.optional || "Preencha um valor.");
       return false;
 
       //Se campo estiver abaixo do mínimo de caracteres
     } else if (props?.minLength && value.length < props?.minLength) {
       setError(
+        props.errorText?.optional ||
         `Este campo precisa conter pelo menos ${props?.minLength} digitos.`
       );
       return false;
-
+    } else if (props?.same && value !== props?.same) {
+      setError(props.errorText?.same || "Os campos não correspondem.");
       //Validação de Regex
     } else if (
       props?.validation &&
@@ -164,7 +170,6 @@ export const useInput = (props) => {
 
   const maskInput = () => {
     if (props?.mask) {
-
       const currentMask = props.customMask || masks[props?.mask];
       let newValue = value;
       currentMask.expressions.forEach((expression) => {
@@ -192,10 +197,11 @@ export const useInput = (props) => {
       onChange,
       onKeyUp,
       onBlur: () => validate(),
-      error,
     },
     type: "input",
+    value,
     setValue,
+    error,
     setError,
     validate: () => validate(),
   };
