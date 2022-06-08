@@ -127,7 +127,8 @@ const masks = {
  * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useInput = (props) => {
-  const [value, setValue] = React.useState(props?.initialValue || "");
+  const initialValue = props?.initialValue || "";
+  const [value, setValue] = React.useState(initialValue);
   const [error, setError] = React.useState(null);
 
   const validate = () => {
@@ -169,8 +170,8 @@ export const useInput = (props) => {
   };
 
   const maskInput = () => {
-    if (props?.mask) {
-      const currentMask = props.customMask || masks[props?.mask];
+    if (props?.customMask || props?.mask) {
+      const currentMask = props?.customMask || masks[props?.mask];
       let newValue = value;
       currentMask.expressions.forEach((expression) => {
         newValue = newValue.replace(expression.regex, expression.replace);
@@ -185,7 +186,7 @@ export const useInput = (props) => {
   };
 
   const onKeyUp = () => {
-    if (props?.mask) {
+    if (props?.customMask || props?.mask) {
       maskInput();
     }
   };
