@@ -51,7 +51,6 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | customValidation | Não | Permite a utilização de regex próprio para validação |
 | mask | Não | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros |
 | customMask | Não | Permite o uso de uma máscara customizada |
-
 | errorText | Não | Permite customizar a mensagens de erro de padrão: `optional`, `same` e `minLength` |
 
 ### Exemplo same
