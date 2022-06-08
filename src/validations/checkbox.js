@@ -7,7 +7,8 @@ import * as React from "react";
  * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 export const useCheckbox = (props) => {
-  const [value, setValue] = React.useState(initialValue || false);
+  const initialValue = props?.initialValue || false;
+  const [value, setValue] = React.useState(initialValue);
   const [error, setError] = React.useState(null);
 
   const validate = () => {
@@ -22,6 +23,7 @@ export const useCheckbox = (props) => {
   };
 
   const onChange = ({ target }) => {
+    console.log(target.checked);
     if (target.checked || props?.optional) {
       setValue(true);
       setError(null);
@@ -39,7 +41,9 @@ export const useCheckbox = (props) => {
       error,
     },
     type: "checkbox",
+    value,
     setValue,
+    error,
     setError,
     validate: () => validate(),
   };
