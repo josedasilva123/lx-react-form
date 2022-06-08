@@ -33,7 +33,7 @@ const masks = {
         replace: "$1-$2",
       },
     ],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
   },
   cpf: {
     expressions: [
@@ -54,7 +54,7 @@ const masks = {
         replace: "$1-$2",
       },
     ],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
   },
   cnpj: {
     expressions: [
@@ -79,7 +79,7 @@ const masks = {
         replace: "$1-$2",
       },
     ],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
   },
   telefone: {
     expressions: [
@@ -96,7 +96,7 @@ const masks = {
         replace: "$1-$2",
       },
     ],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
   },
   inteiros: {
     expressions: [
@@ -109,7 +109,7 @@ const masks = {
         replace: "$1",
       },
     ],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
   },
 };
 
@@ -135,13 +135,13 @@ export const useInput = (props) => {
 
     //Se campo estiver vazio
     if (value.length === 0) {
-      setError(props.errorText?.optional || "Preencha um valor.");
+      setError(props.errorText?.required || "Preencha um valor.");
       return false;
 
       //Se campo estiver abaixo do mínimo de caracteres
     } else if (props?.minLength && value.length < props?.minLength) {
       setError(
-        props.errorText?.optional ||
+        props.errorText?.minLength ||
         `Este campo precisa conter pelo menos ${props?.minLength} digitos.`
       );
       return false;
