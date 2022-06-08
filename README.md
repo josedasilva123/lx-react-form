@@ -18,6 +18,48 @@ ou
 yarn add lx-react-form
 ```
 
+## Exemplo completo
+
+```jsx
+import { useForm, useInput } from "lx-react-form"
+
+const name = useInput({
+    name: "name",
+})
+
+const email = useInput({
+    name: "name",
+    validation: "email"
+})
+
+const password = useInput({
+    name: "password",
+    validation: "senha"
+})
+
+const form = useForm({
+    clearFields: true,
+    formFields: [name, email, password],
+    submitCallback: (formData) => {
+        console.log(formData);
+    }
+});
+```
+
+return(
+    <form onSubmit={form.handleSubmit}>
+        <input type="text" {...name.inputProps} />
+        {name.error && <p>{name.error}</p>}
+
+        <input type="email" {...email.inputProps} />
+        {email.error && <p>{email.error}</p>}
+
+        <input type="password" {...password.inputProps} />
+        {password.error && <p>{password.error}</p>}
+    </form>
+)
+```
+
 ## Validações de input (text, email, number) ou textarea
 
 Você pode validar esses tipos de campo com o hook `useInput`
@@ -33,7 +75,7 @@ const example = useInput({
 
 return(
     <form>
-        <input {...example.inputProps} maxLength={15}/>
+        <input type="text" {...example.inputProps} maxLength={15}/>
         {example.error && <p>{example.error}</p>}
     </form>
 )
@@ -70,10 +112,10 @@ const confirmpassword = useInput({
 
 return(
     <form>
-        <input {...password.inputProps}/>
+        <input type="password" {...password.inputProps}/>
         {password.error && <p>{password.error}</p>}
 
-        <input {...confirmpassword.inputProps}/>
+        <input type="password" {...confirmpassword.inputProps}/>
         {confirmpassword.error && <p>{confirmpassword.error}</p>}
     </form>
 )
@@ -95,7 +137,7 @@ const password = useInput({
 
 return(
     <form>
-        <input {...password.inputProps}/>
+        <input type="password" {...password.inputProps}/>
         {password.error && <p>{password.error}</p>}
     </form>
 )
@@ -129,7 +171,7 @@ const birthDate = useInput({
 
 return(
     <form>
-        <input {...birthDate.inputProps} maxLength={10}/>
+        <input type="text" {...birthDate.inputProps} maxLength={10}/>
         {birthDate.error && <p>{birthDate.error}</p>}
     </form>
 )
@@ -153,7 +195,7 @@ const password = useInput({
 
 return(
     <form>
-        <input {...password.inputProps} maxLength={15}/>
+        <input type="password" {...password.inputProps} />
         {password.error && <p>{password.error}</p>}
     </form>
 )
