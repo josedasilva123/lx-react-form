@@ -44,7 +44,7 @@ const form = useForm({
         console.log(formData);
     }
 });
-```
+
 
 return(
     <form onSubmit={form.handleSubmit}>
@@ -56,6 +56,8 @@ return(
 
         <input type="password" {...password.inputProps} />
         {password.error && <p>{password.error}</p>}
+
+        <button type="submit">Enviar</button>
     </form>
 )
 ```
