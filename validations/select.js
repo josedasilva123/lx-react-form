@@ -29,9 +29,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * @param {Object} props - Configurações do select
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {string} props.initialValue - Valor inicial (precisa corresponder a uma option)
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 var useSelect = function useSelect(props) {
-  var _React$useState = React.useState(""),
+  var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || "";
+
+  var _React$useState = React.useState(initialValue),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       value = _React$useState2[0],
       setValue = _React$useState2[1];
@@ -72,7 +76,9 @@ var useSelect = function useSelect(props) {
       error: error
     },
     type: "select",
+    value: value,
     setValue: setValue,
+    error: error,
     setError: setError,
     validate: function validate() {
       return _validate();

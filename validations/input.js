@@ -51,8 +51,8 @@ var masks = {
     }, {
       regex: /^(\d{5})(\d)/,
       replace: "$1-$2"
-    }],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g
+    }] // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+
   },
   cpf: {
     expressions: [{
@@ -67,8 +67,8 @@ var masks = {
     }, {
       regex: /(\d{3})(\d{1,2})$/,
       replace: "$1-$2"
-    }],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g
+    }] // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+
   },
   cnpj: {
     expressions: [{
@@ -86,8 +86,8 @@ var masks = {
     }, {
       regex: /(\d{4})(\d)/,
       replace: "$1-$2"
-    }],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g
+    }] // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+
   },
   telefone: {
     expressions: [{
@@ -99,8 +99,8 @@ var masks = {
     }, {
       regex: /(\d)(\d{4})$/,
       replace: "$1-$2"
-    }],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g
+    }] // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+
   },
   inteiros: {
     expressions: [{
@@ -109,22 +109,28 @@ var masks = {
     }, {
       regex: /(\d)$/,
       replace: "$1"
-    }],
-    clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g
+    }] // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+
   }
 };
 /**
  * @param {Object} props - Configurações do input
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {string} props.initialValue - Valor inicial
  * @param {string} props.validation - Tipo de validação do campo  (email, cep, senha ou telefone)
  * @param {string} props.mask - Máscara do campo (cep, cpf, cnpj, telefone, inteiros)
  * @param {Object} props.customValidation - Validação personalizada, precisa de um regex + error
  * @param {Object} props.customMask - Mascará personalizada, precisa uma lista expressions + clear
+ * @param {string} props.same - Compara o valor de um campo com outro, exigindo que os mesmos correspondam
+ * @param {number} props.minLength - Quatidade de dígitos mínimos necessários
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 
 var useInput = function useInput(props) {
-  var _React$useState = React.useState(""),
+  var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || "";
+
+  var _React$useState = React.useState(initialValue),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       value = _React$useState2[0],
       setValue = _React$useState2[1];
@@ -140,11 +146,19 @@ var useInput = function useInput(props) {
     if (props !== null && props !== void 0 && props.optional) return true; //Se campo estiver vazio
 
     if (value.length === 0) {
-      setError("Preencha um valor.");
+      var _props$errorText;
+
+      setError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Preencha um valor.");
       return false; //Se campo estiver abaixo do mínimo de caracteres
     } else if (props !== null && props !== void 0 && props.minLength && value.length < (props === null || props === void 0 ? void 0 : props.minLength)) {
-      setError("Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
-      return false; //Validação de Regex
+      var _props$errorText2;
+
+      setError(((_props$errorText2 = props.errorText) === null || _props$errorText2 === void 0 ? void 0 : _props$errorText2.minLength) || "Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
+      return false;
+    } else if (props !== null && props !== void 0 && props.same && value !== (props === null || props === void 0 ? void 0 : props.same)) {
+      var _props$errorText3;
+
+      setError(((_props$errorText3 = props.errorText) === null || _props$errorText3 === void 0 ? void 0 : _props$errorText3.same) || "Os campos não correspondem."); //Validação de Regex
     } else if (props !== null && props !== void 0 && props.validation && !((_validations$props$va = validations[props === null || props === void 0 ? void 0 : props.validation]) !== null && _validations$props$va !== void 0 && _validations$props$va.regex.test(value))) {
       setError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
       return false; //Validação de Regex Custom
@@ -158,8 +172,8 @@ var useInput = function useInput(props) {
   };
 
   var maskInput = function maskInput() {
-    if (props !== null && props !== void 0 && props.mask) {
-      var currentMask = props.customMask || masks[props === null || props === void 0 ? void 0 : props.mask];
+    if (props !== null && props !== void 0 && props.customMask || props !== null && props !== void 0 && props.mask) {
+      var currentMask = (props === null || props === void 0 ? void 0 : props.customMask) || masks[props === null || props === void 0 ? void 0 : props.mask];
       var newValue = value;
       currentMask.expressions.forEach(function (expression) {
         newValue = newValue.replace(expression.regex, expression.replace);
@@ -174,7 +188,7 @@ var useInput = function useInput(props) {
   };
 
   var onKeyUp = function onKeyUp() {
-    if (props !== null && props !== void 0 && props.mask) {
+    if (props !== null && props !== void 0 && props.customMask || props !== null && props !== void 0 && props.mask) {
       maskInput();
     }
   };
@@ -187,11 +201,12 @@ var useInput = function useInput(props) {
       onKeyUp: onKeyUp,
       onBlur: function onBlur() {
         return _validate();
-      },
-      error: error
+      }
     },
     type: "input",
+    value: value,
     setValue: setValue,
+    error: error,
     setError: setError,
     validate: function validate() {
       return _validate();

@@ -29,9 +29,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * @param {Object} props - Configurações do checkbox
  * @param {boolean} props.optional - É opcional ou não (false por padrão)
  * @param {string} props.name - Nome do campo
+ * @param {boolean} props.initialValue - Valor inicial
+ * @param {Object} props.errorText - Permite a configuração dos textos de erro
  */
 var useCheckbox = function useCheckbox(props) {
-  var _React$useState = React.useState(false),
+  var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || false;
+
+  var _React$useState = React.useState(initialValue),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       value = _React$useState2[0],
       setValue = _React$useState2[1];
@@ -45,7 +49,9 @@ var useCheckbox = function useCheckbox(props) {
     if (props !== null && props !== void 0 && props.optional) return true;
 
     if (!value) {
-      setError("Marcar esta caixa é obrigátorio.");
+      var _props$errorText;
+
+      setError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Marcar esta caixa é obrigátorio.");
       return false;
     } else {
       setError(null);
@@ -55,13 +61,16 @@ var useCheckbox = function useCheckbox(props) {
 
   var onChange = function onChange(_ref) {
     var target = _ref.target;
+    console.log(target.checked);
 
     if (target.checked || props !== null && props !== void 0 && props.optional) {
       setValue(true);
       setError(null);
     } else {
+      var _props$errorText2;
+
       setValue(false);
-      setError("Marcar esta caixa é obrigátorio.");
+      setError(((_props$errorText2 = props.errorText) === null || _props$errorText2 === void 0 ? void 0 : _props$errorText2.required) || "Marcar esta caixa é obrigátorio.");
     }
   };
 
@@ -73,7 +82,9 @@ var useCheckbox = function useCheckbox(props) {
       error: error
     },
     type: "checkbox",
+    value: value,
     setValue: setValue,
+    error: error,
     setError: setError,
     validate: function validate() {
       return _validate();
