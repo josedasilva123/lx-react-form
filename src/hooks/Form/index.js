@@ -1,6 +1,6 @@
 /**
  * @param {Object} props - Configurações do form
- * @param {any[]} props.formFields - Uma lista dos campos gerados pelos hooks
+ * @param {Array} props.formFields - Uma lista dos campos gerados pelos hooks
  * @param {boolean} props.clearFields - Limpar os campos do formulário ao enviar
  * @param {() => void} props.submitCallback - Função, recebe formData como parâmetro padrão via callback
  */
