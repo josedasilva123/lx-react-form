@@ -76,7 +76,7 @@ const example = useInput({
 
 return (
   <form>
-    <input type="text" {...example.inputProps} maxLength={15} />
+    <input type="text" {...example.inputProps} maxLength="15" />
     {example.error && <p>{example.error}</p>}
   </form>
 );
@@ -90,6 +90,7 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | optional         | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
 | initialValue     | Não         | Define um valor inicial para o campo                                                  |
 | same             | Não         | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder    |
+| minLength            | Não         | O número de caracteres mínimo para o respectivo campo    |
 | validation       | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
 | customValidation | Não         | Permite a utilização de regex próprio para validação                                  |
 | mask             | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
@@ -132,7 +133,7 @@ import { useInput } from "lx-react-form"
 const password = useInput({
     name: "password",
     customValidation: {
-        regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+        regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
         error: "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número"
     }
 })
@@ -174,7 +175,7 @@ const birthDate = useInput({
 
 return (
   <form>
-    <input type="text" {...birthDate.inputProps} maxLength={10} />
+    <input type="text" {...birthDate.inputProps} maxLength="10" />
     {birthDate.error && <p>{birthDate.error}</p>}
   </form>
 );
@@ -267,3 +268,40 @@ Confira abaixo todas as opções disponíveis para o hook `useSelect`
 | initialValue | Não         | Define um valor inicial para o campo                                                  |
 | errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
 
+## (useForm) - hook para gerar a função de envio dos formulários
+
+O `useForm` condensa os campos em única lista e executa todas as validações antes de executar a função de envio
+
+```jsx
+import { useForm } from "lx-react-form";
+
+const form = useForm({
+  clearFields: true,
+  formFields: [campo1, campo2, campo3],
+  submitCallback: (formData) => {
+    console.log(formData);
+  },
+});
+
+return (
+  <form onSubmit={form.handleSubmit}>
+    <input type="text" {...name.inputProps} />
+    {name.error && <p>{name.error}</p>}
+
+    <input type="email" {...email.inputProps} />
+    {email.error && <p>{email.error}</p>}
+
+    <input type="password" {...password.inputProps} />
+    {password.error && <p>{password.error}</p>}
+
+    <button type="submit">Enviar</button>
+  </form>
+);
+```
+| Opções       | Obrigatório | Descrição                                                                             |
+| ------------ | ----------- | ------------------------------------------------------------------------------------- |
+| clearFields        | Não       | Limpa os campos após um envio bem sucedido do formulário |
+| formFields    | Sim\*         | Lista de campos do formulário (se refere aos hooks instaciados)                                  |
+| submitCallback | Não         | Função de callback do envio, recebe como parâmetro padrão `formData` contendo um objeto com todos os campos e valores                                                  |
+
+This is LX React Form!
