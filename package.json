@@ -7,10 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d ."
   },
-  "peerDependencies": {
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
-  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
