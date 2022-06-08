@@ -33,7 +33,7 @@ const example = useInput({
 
 return(
     <form>
-        <input {...example.inputProps}/>
+        <input {...example.inputProps} maxLength={15}/>
         {example.error && <p>{example.error}</p>}
     </form>
 )
@@ -51,7 +51,7 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | customValidation | Não | Permite a utilização de regex próprio para validação |
 | mask | Não | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros |
 | customMask | Não | Permite o uso de uma máscara customizada |
-| errorText | Não | Permite customizar a mensagens de erro de padrão: `optional`, `same` e `minLength` |
+| errorText | Não | Permite customizar a mensagens de erro de padrão: `required`, `same` e `minLength` |
 
 ### Exemplo same
 
@@ -80,12 +80,13 @@ return(
 ```
 
 ### Exemplo customValidation
+Valida o campo comparando ao regex fornecido
 
 ```jsx
 import { useInput } from "lx-react-form"
 
 const password = useInput({
-    name: "example",
+    name: "password",
     customValidation: {
         regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
         error: "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número"
@@ -95,6 +96,64 @@ const password = useInput({
 return(
     <form>
         <input {...password.inputProps}/>
+        {password.error && <p>{password.error}</p>}
+    </form>
+)
+```
+
+### Exemplo customMask
+Aplica a máscara fornecida ao campo
+
+```jsx
+import { useInput } from "lx-react-form"
+
+const birthDate = useInput({
+    name: "birthdate",
+    customMask: {
+        expressions: [
+            {
+                regex: /\D/g,
+                replace: "",
+            },
+            {
+                regex: /(\d{2})(\d)/,
+                replace: "$1/$2",
+            },
+            {
+                regex: /(\d{2})(\d{4})/,
+                replace: "$1/$2",
+            },
+        ],
+    }
+})
+
+return(
+    <form>
+        <input {...birthDate.inputProps} maxLength={10}/>
+        {birthDate.error && <p>{birthDate.error}</p>}
+    </form>
+)
+```
+
+### Exemplo alterando errorText
+
+Configurando as mensagens de erro padrão
+
+```jsx
+import { useInput } from "lx-react-form"
+
+const password = useInput({
+    name: "password",
+    errorText: {
+        required: "This field is required",
+        same: "Confirm password must match with password",
+        minLength: "Password must contain at least 8 characters",
+    }
+})
+
+return(
+    <form>
+        <input {...password.inputProps} maxLength={15}/>
         {password.error && <p>{password.error}</p>}
     </form>
 )
