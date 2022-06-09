@@ -2,7 +2,7 @@
 
 ## Notas de atualização
 
-## 1.1.2
+## 1.1.3
 
 - Fix Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
@@ -360,7 +360,7 @@ return (
         <input type="email" {...email.inputProps} />
         {email.error && <p>{email.error}</p>}
 
-        <button type="button" onClick={() => form.nextStep()}>
+        <button type="button" onClick={form.nextStep}>
           Avançar
         </button>
       </>
@@ -371,7 +371,7 @@ return (
         <input type="password" {...password.inputProps} />
         {password.error && <p>{password.error}</p>}
 
-        <button type="button" onClick={() => form.previousStep()}>
+        <button type="button" onClick={form.previousStep}>
           Voltar
         </button>
 
