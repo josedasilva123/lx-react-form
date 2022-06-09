@@ -139,31 +139,43 @@ var useInput = function useInput(props) {
       _React$useState4 = _slicedToArray(_React$useState3, 2),
       error = _React$useState4[0],
       setError = _React$useState4[1];
+  /**
+   * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+   */
 
-  var _validate = function validate() {
+
+  var _validate = function validate(disabledErrors) {
     var _validations$props$va;
+
+    // Atribui o erro ao estado caso o controle esteja habilitado
+    function setValidateError(errorText) {
+      if (!disabledErrors) {
+        setError(errorText);
+      }
+    }
 
     if (props !== null && props !== void 0 && props.optional) return true; //Se campo estiver vazio
 
     if (value.length === 0) {
       var _props$errorText;
 
-      setError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Preencha um valor.");
+      setValidateError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Preencha um valor.");
       return false; //Se campo estiver abaixo do mínimo de caracteres
     } else if (props !== null && props !== void 0 && props.minLength && value.length < (props === null || props === void 0 ? void 0 : props.minLength)) {
       var _props$errorText2;
 
-      setError(((_props$errorText2 = props.errorText) === null || _props$errorText2 === void 0 ? void 0 : _props$errorText2.minLength) || "Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
-      return false;
+      setValidateError(((_props$errorText2 = props.errorText) === null || _props$errorText2 === void 0 ? void 0 : _props$errorText2.minLength) || "Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
+      return false; // Se o campo não corresponder com o campo relacionado
     } else if (props !== null && props !== void 0 && props.same && value !== (props === null || props === void 0 ? void 0 : props.same)) {
       var _props$errorText3;
 
-      setError(((_props$errorText3 = props.errorText) === null || _props$errorText3 === void 0 ? void 0 : _props$errorText3.same) || "Os campos não correspondem."); //Validação de Regex
+      setValidateError(((_props$errorText3 = props.errorText) === null || _props$errorText3 === void 0 ? void 0 : _props$errorText3.same) || "Os campos não correspondem.");
+      return false; //Validação de Regex
     } else if (props !== null && props !== void 0 && props.validation && !((_validations$props$va = validations[props === null || props === void 0 ? void 0 : props.validation]) !== null && _validations$props$va !== void 0 && _validations$props$va.regex.test(value))) {
-      setError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
+      setValidateError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
       return false; //Validação de Regex Custom
     } else if (props !== null && props !== void 0 && props.customValidation && !(props !== null && props !== void 0 && props.customValidation.regex.test(value))) {
-      setError(props === null || props === void 0 ? void 0 : props.customValidation.error);
+      setValidateError(props === null || props === void 0 ? void 0 : props.customValidation.error);
       return false;
     } else {
       setError(null);

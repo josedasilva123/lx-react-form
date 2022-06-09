@@ -44,14 +44,21 @@ var useCheckbox = function useCheckbox(props) {
       _React$useState4 = _slicedToArray(_React$useState3, 2),
       error = _React$useState4[0],
       setError = _React$useState4[1];
+  /**
+   * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+   */
 
-  var _validate = function validate() {
+
+  var _validate = function validate(disabledErrors) {
     if (props !== null && props !== void 0 && props.optional) return true;
 
     if (!value) {
-      var _props$errorText;
+      if (!disabledErrors) {
+        var _props$errorText;
 
-      setError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Marcar esta caixa é obrigátorio.");
+        setError(((_props$errorText = props.errorText) === null || _props$errorText === void 0 ? void 0 : _props$errorText.required) || "Marcar esta caixa é obrigátorio.");
+      }
+
       return false;
     } else {
       setError(null);
@@ -75,7 +82,7 @@ var useCheckbox = function useCheckbox(props) {
   };
 
   return {
-    checkProps: {
+    inputProps: {
       value: value,
       name: props === null || props === void 0 ? void 0 : props.name,
       onChange: onChange,

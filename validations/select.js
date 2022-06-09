@@ -44,12 +44,19 @@ var useSelect = function useSelect(props) {
       _React$useState4 = _slicedToArray(_React$useState3, 2),
       error = _React$useState4[0],
       setError = _React$useState4[1];
+  /**
+   * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+   */
 
-  function _validate() {
+
+  function _validate(disabledErrors) {
     if (props !== null && props !== void 0 && props.optional) return true;
 
     if (!value) {
-      setError("É necessário selecionar pelo menos um valor neste campo.");
+      if (!disabledErrors) {
+        setError("É necessário selecionar pelo menos um valor neste campo.");
+      }
+
       return false;
     } else {
       setError(null);
@@ -69,7 +76,7 @@ var useSelect = function useSelect(props) {
   };
 
   return {
-    selectProps: {
+    inputProps: {
       value: value,
       name: props === null || props === void 0 ? void 0 : props.name,
       onChange: onChange,
