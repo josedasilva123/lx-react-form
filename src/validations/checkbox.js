@@ -11,14 +11,23 @@ export const useCheckbox = (props) => {
   const [value, setValue] = React.useState(initialValue);
   const [error, setError] = React.useState(null);
 
-  const validate = () => {
+  /**
+   * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+   */
+  const validate = (disabledErrors) => {
     if (props?.optional) return true;
     if (!value) {
-      setError(props.errorText?.required || "Marcar esta caixa é obrigátorio.");
+      if (!disabledErrors) {
+        setError(
+          props.errorText?.required || "Marcar esta caixa é obrigátorio."
+        );
+      }
       return false;
+
     } else {
       setError(null);
       return true;
+
     }
   };
 
@@ -34,7 +43,7 @@ export const useCheckbox = (props) => {
   };
 
   return {
-    checkProps: {
+    inputProps: {
       value,
       name: props?.name,
       onChange,

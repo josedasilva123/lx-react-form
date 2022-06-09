@@ -131,38 +131,54 @@ export const useInput = (props) => {
   const [value, setValue] = React.useState(initialValue);
   const [error, setError] = React.useState(null);
 
-  const validate = () => {
+  /**
+   * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+   */
+  const validate = (disabledErrors) => {
+    
+    // Atribui o erro ao estado caso o controle esteja habilitado
+    function setValidateError(errorText) {
+      if (!disabledErrors) {
+        setError(errorText);
+      }
+    }
+
     if (props?.optional) return true;
 
     //Se campo estiver vazio
     if (value.length === 0) {
-      setError(props.errorText?.required || "Preencha um valor.");
+      setValidateError(props.errorText?.required || "Preencha um valor.");
       return false;
 
-      //Se campo estiver abaixo do mínimo de caracteres
+    //Se campo estiver abaixo do mínimo de caracteres
     } else if (props?.minLength && value.length < props?.minLength) {
-      setError(
+      setValidateError(
         props.errorText?.minLength ||
-        `Este campo precisa conter pelo menos ${props?.minLength} digitos.`
+          `Este campo precisa conter pelo menos ${props?.minLength} digitos.`
       );
       return false;
+
+    // Se o campo não corresponder com o campo relacionado
     } else if (props?.same && value !== props?.same) {
-      setError(props.errorText?.same || "Os campos não correspondem.");
-      //Validação de Regex
+      setValidateError(props.errorText?.same || "Os campos não correspondem.");
+      return false;
+
+    //Validação de Regex
     } else if (
       props?.validation &&
       !validations[props?.validation]?.regex.test(value)
     ) {
-      setError(validations[props?.validation].error);
+      setValidateError(validations[props?.validation].error);
       return false;
 
-      //Validação de Regex Custom
+    //Validação de Regex Custom
     } else if (
       props?.customValidation &&
       !props?.customValidation.regex.test(value)
     ) {
-      setError(props?.customValidation.error);
+      setValidateError(props?.customValidation.error);
       return false;
+
     } else {
       setError(null);
       return true;
