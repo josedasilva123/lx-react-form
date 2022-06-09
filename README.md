@@ -109,7 +109,7 @@ const password = useInput({
 
 const confirmpassword = useInput({
   name: "confirmpassword",
-  same: example.value,
+  same: password.value,
 });
 
 return (
