@@ -378,7 +378,7 @@ return (
 | stepMode     | Não       | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos)     |
 | stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva |
 
-#Exemplo de etapas com stepMode onChange
+### Exemplo de etapas com stepMode onChange
 
 ```jsx
 import { useForm, useInput } from "lx-react-form";
@@ -443,5 +443,6 @@ return (
     )}   
   </form>
 );
+```
 
 This is LX React Form!
