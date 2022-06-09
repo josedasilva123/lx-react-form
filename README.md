@@ -90,7 +90,7 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | optional         | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
 | initialValue     | Não         | Define um valor inicial para o campo                                                  |
 | same             | Não         | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder    |
-| minLength            | Não         | O número de caracteres mínimo para o respectivo campo    |
+| minLength        | Não         | O número de caracteres mínimo para o respectivo campo                                 |
 | validation       | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
 | customValidation | Não         | Permite a utilização de regex próprio para validação                                  |
 | mask             | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
@@ -128,22 +128,23 @@ return (
 Valida o campo comparando ao regex fornecido
 
 ```jsx
-import { useInput } from "lx-react-form"
+import { useInput } from "lx-react-form";
 
 const password = useInput({
-    name: "password",
-    customValidation: {
-        regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        error: "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número"
-    }
-})
+  name: "password",
+  customValidation: {
+    regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+    error:
+      "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número",
+  },
+});
 
-return(
-    <form>
-        <input type="password" {...password.inputProps}/>
-        {password.error && <p>{password.error}</p>}
-    </form>
-)
+return (
+  <form>
+    <input type="password" {...password.inputProps} />
+    {password.error && <p>{password.error}</p>}
+  </form>
+);
 ```
 
 ### Exemplo customMask
@@ -233,7 +234,7 @@ Confira abaixo todas as opções disponíveis para o hook `useCheckbox`
 | ------------ | ----------- | ------------------------------------------------------------------------------------- |
 | name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
 | optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
-| initialValue | Não         | Define um valor inicial para o campo (precisa ser obrigatoriamente `true` ou `false`)                                                 |
+| initialValue | Não         | Define um valor inicial para o campo (precisa ser obrigatoriamente `true` ou `false`) |
 | errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
 
 ## (useSelect) - Validações de select
@@ -250,9 +251,9 @@ const example = useSelect({
 return (
   <form>
     <select {...example.inputProps}>
-        <option value="">Selecione uma ocupação</option>
-        <option value="pedreiro">Pedreiro</option>
-        <option value="padeiro">Padeiro</option>
+      <option value="">Selecione uma ocupação</option>
+      <option value="pedreiro">Pedreiro</option>
+      <option value="padeiro">Padeiro</option>
     </select>
     {example.error && <p>{example.error}</p>}
   </form>
@@ -298,10 +299,149 @@ return (
   </form>
 );
 ```
-| Opções       | Obrigatório | Descrição                                                                             |
-| ------------ | ----------- | ------------------------------------------------------------------------------------- |
-| clearFields        | Não       | Limpa os campos após um envio bem sucedido do formulário |
-| formFields    | Sim\*         | Lista de campos do formulário (se refere aos hooks instaciados)                                  |
-| submitCallback | Não         | Função de callback do envio, recebe como parâmetro padrão `formData` contendo um objeto com todos os campos e valores                                                  |
+
+| Opções         | Obrigatório | Descrição                                                                                                             |
+| -------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
+| clearFields    | Não         | Limpa os campos após um envio bem sucedido do formulário                                                              |
+| formFields     | Sim\*       | Lista de campos do formulário (se refere aos hooks instaciados)                                                       |
+| submitCallback | Não         | Função de callback do envio, recebe como parâmetro padrão `formData` contendo um objeto com todos os campos e valores |
+
+## Formulários de etapas - uso avançado do useForm
+
+Com o useForm é possível, além da criação de formulários convencionais, formulários com etapas
+
+```jsx
+import { useForm, useInput } from "lx-react-form";
+
+const name = useInput({
+  name: "name",
+});
+
+const email = useInput({
+  name: "name",
+  validation: "email",
+});
+
+const password = useInput({
+  name: "password",
+  validation: "senha",
+});
+
+const form = useForm({
+  clearFields: true,
+  stepFields: {
+    0: [name, email],
+    1: [password],
+  }
+  formFields: [name, email, password],
+  submitCallback: (formData) => {
+    console.log(formData);
+  },
+});
+
+return (
+  <form onSubmit={form.handleSubmit}>
+    {form.step === 0 && (
+      <>
+        <input type="text" {...name.inputProps} />
+        {name.error && <p>{name.error}</p>}
+
+        <input type="email" {...email.inputProps} />
+        {email.error && <p>{email.error}</p>}
+
+        <button type="button" onClick={() => form.nextStep()}>
+          Avançar
+        </button>
+      </>
+    )}
+
+    {form.step === 1 && (
+      <>
+        <input type="password" {...password.inputProps} />
+        {password.error && <p>{password.error}</p>}
+
+        <button type="button" onClick={() => form.previousStep()}>
+          Voltar
+        </button>
+
+        <button type="submit">Enviar</button>
+      </>
+    )}
+   
+  </form>
+);
+```
+
+| Opções         | Obrigatório | Descrição                                                                                                             |
+| -------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
+| stepFields    | Sim\*         | Um objeto contendo uma lista de campos para cada etapa do formulário                                                    |
+| stepMode     | Não       | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos)     |
+| stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva |
+
+#Exemplo de etapas com stepMode onChange
+
+```jsx
+import { useForm, useInput } from "lx-react-form";
+
+const name = useInput({
+  name: "name",
+});
+
+const email = useInput({
+  name: "name",
+  validation: "email",
+});
+
+const password = useInput({
+  name: "password",
+  validation: "senha",
+});
+
+const form = useForm({
+  clearFields: true,
+  stepMode: "onChange"
+  stepFields: {
+    0: [name, email],
+    1: [password],
+  }
+  formFields: [name, email, password],
+  submitCallback: (formData) => {
+    console.log(formData);
+  },
+});
+
+return (
+  <form onSubmit={form.handleSubmit}>
+    {form.step === 0 && (
+      <>
+        <input type="text" {...name.inputProps} />
+        {name.error && <p>{name.error}</p>}
+
+        <input type="email" {...email.inputProps} />
+        {email.error && <p>{email.error}</p>}
+
+        {form.canProceed && (
+          <button type="button" onClick={() => form.nextStep()}>
+            Avançar
+          </button>
+        )}
+      </>
+    )}
+
+    {form.step === 1 && (
+      <>
+        <input type="password" {...password.inputProps} />
+        {password.error && <p>{password.error}</p>}
+
+        <button type="button" onClick={() => form.previousStep()}>
+          Voltar
+        </button>
+        {form.canProceed && (
+          <button type="submit">Enviar</button>
+        )}
+      </>
+    )}   
+  </form>
+);
 
 This is LX React Form!
