@@ -7,7 +7,7 @@
 - Fix Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
 
-## 1.0.2
+### 1.0.2
 - Fix: (Essencial) Correção de bugs que impediam o envio de select e checkbox na função handleSubmit
 
 
