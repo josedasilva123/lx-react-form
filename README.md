@@ -1,5 +1,16 @@
 # LX React Form
 
+## Notas de atualização
+
+### 1.1.1
+
+- Fix Correção de pequenos bugs
+- Feat: Lançamento da feature de steps (formulários em etapa)
+
+## 1.0.2
+- Fix: (Essencial) Correção de bugs que impediam o envio de select e checkbox na função handleSubmit
+
+
 O LX React Form é uma biblioteca brasileira de formulários para React criado em formato de hook.
 
 Leve flexível e com diversas features a disposição, como: validação de diversos tipos de campos (input, checkbox, select), possibilidade de validação com regex, máscaras (padrões e costumizadas) e muito mais.
