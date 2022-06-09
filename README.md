@@ -308,7 +308,7 @@ return (
 
 ## Formulários de etapas - uso avançado do useForm
 
-Com o useForm é possível, além da criação de formulários convencionais, formulários com etapas
+Com o `useForm` é possível, além da criação de formulários convencionais, formulários com etapas
 
 ```jsx
 import { useForm, useInput } from "lx-react-form";
