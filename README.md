@@ -219,7 +219,7 @@ const example = useCheckbox({
 return (
   <form>
     <label htmlFor={example.name}>
-      <input type="checkbox" {...example.checkProps} />
+      <input type="checkbox" {...example.inputProps} />
       <span>Eu aceito a política de privicidade</span>
     </label>
     {example.error && <p>{example.error}</p>}
@@ -249,7 +249,7 @@ const example = useSelect({
 
 return (
   <form>
-    <select {...example.selectProps}>
+    <select {...example.inputProps}>
         <option value="">Selecione uma ocupação</option>
         <option value="pedreiro">Pedreiro</option>
         <option value="padeiro">Padeiro</option>
