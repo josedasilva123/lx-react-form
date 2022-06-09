@@ -5,21 +5,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.useForm = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -35,13 +27,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * @param {Object} props - Configurações do form
- * @param {[]} props.formFields - Uma lista dos campos gerados pelos hooks
+ * @param {string} props.stepMode - Pode ser "onChange", caso você deseje utilizar o canProceed como gatilho condicional
+ * @param {boolean} props.stepClearFieldsOnBack - A função previousStep limpa os campos da etapa respectiva
+ * @param {Object} props.stepFields - Um objeto contendo uma lista de campos para cada etapa do formulário
+ * @param {Array} props.formFields - Uma lista dos campos gerados pelos hooks
  * @param {boolean} props.clearFields - Limpar os campos do formulário ao enviar
  * @param {() => void} props.submitCallback - Função, recebe formData como parâmetro padrão via callback
  */
 var useForm = function useForm(_ref) {
   var formFields = _ref.formFields,
       stepMode = _ref.stepMode,
+      stepClearFieldsOnBack = _ref.stepClearFieldsOnBack,
       stepFields = _ref.stepFields,
       clearFields = _ref.clearFields,
       submitCallback = _ref.submitCallback;
@@ -53,8 +49,8 @@ var useForm = function useForm(_ref) {
 
   var _React$useState3 = React.useState(false),
       _React$useState4 = _slicedToArray(_React$useState3, 2),
-      canProcede = _React$useState4[0],
-      setCanProcede = _React$useState4[1];
+      canProceed = _React$useState4[0],
+      setCanProceed = _React$useState4[1];
 
   if (stepFields) {
     React.useEffect(function () {
@@ -66,14 +62,14 @@ var useForm = function useForm(_ref) {
         if (validationList.every(function (validation) {
           return validation;
         })) {
-          setCanProcede(true);
+          setCanProceed(true);
         } else {
-          setCanProcede(false);
+          setCanProceed(false);
         }
       }
-    }, _toConsumableArray(stepFields[step].map(function (field) {
+    }, stepFields[step].map(function (field) {
       return field.value;
-    })));
+    }));
   }
 
   function nextStep(event) {
@@ -94,6 +90,13 @@ var useForm = function useForm(_ref) {
     event.preventDefault();
 
     if (step > 0) {
+      if (stepClearFieldsOnBack) {
+        stepFields[step].forEach(function (field) {
+          var initialValue = field.type === "checkbox" ? false : "";
+          field.setValue(initialValue);
+        });
+      }
+
       setStep(step - 1); //Decrementa a etapa
     }
   }
@@ -120,19 +123,20 @@ var useForm = function useForm(_ref) {
         formFields.forEach(function (field) {
           var initialValue = field.type === "checkbox" ? false : "";
           field.setValue(initialValue);
-        });
+        }); //Reinicia etapas
+
+        setStep(0);
       }
     }
   }
 
   return {
     handleSubmit: handleSubmit,
-    canProcede: canProcede,
+    canProceed: canProceed,
     step: step,
     nextStep: nextStep,
     previousStep: previousStep
   };
 };
 
-var _default = useForm;
-exports["default"] = _default;
+exports.useForm = useForm;

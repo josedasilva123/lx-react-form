@@ -12,7 +12,7 @@ Object.defineProperty(exports, "useCheckbox", {
 Object.defineProperty(exports, "useForm", {
   enumerable: true,
   get: function get() {
-    return _Form["default"];
+    return _Form.useForm;
   }
 });
 Object.defineProperty(exports, "useInput", {
@@ -34,6 +34,4 @@ var _checkbox = require("./validations/checkbox");
 
 var _select = require("./validations/select");
 
-var _Form = _interopRequireDefault(require("./hooks/Form"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _Form = require("./hooks/Form");
