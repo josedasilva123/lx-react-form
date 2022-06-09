@@ -1,14 +1,52 @@
+import * as React from "react";
+
 /**
  * @param {Object} props - Configurações do form
- * @param {Array} props.formFields - Uma lista dos campos gerados pelos hooks
+ * @param {[]} props.formFields - Uma lista dos campos gerados pelos hooks
  * @param {boolean} props.clearFields - Limpar os campos do formulário ao enviar
  * @param {() => void} props.submitCallback - Função, recebe formData como parâmetro padrão via callback
  */
 const useForm = ({
   formFields,
+  stepMode,
+  stepFields,
   clearFields,
   submitCallback,
 }) => {
+  const [step, setStep] = React.useState(0);
+  const [canProcede, setCanProcede] = React.useState(false);
+
+  if (stepFields) {
+    React.useEffect(() => {
+      if (stepMode === "onChange" && stepFields) {
+        const validationList = stepFields?.[step].map((field) =>
+          field.validate(true)
+        );
+        if (validationList.every((validation) => validation)) {
+          setCanProcede(true);
+        } else {
+          setCanProcede(false);
+        }
+      }
+    }, [...stepFields[step].map(field => field.value)]);
+  }
+
+  function nextStep(event) {
+    event.preventDefault();
+    //Executa todas as validações na etapa atual
+    const validationList = stepFields?.[step].map((field) => field.validate());
+    if (validationList.every((validation) => validation)) {
+      setStep(step + 1); //Incrementa a etapa
+    }
+  }
+
+  function previousStep(event) {
+    event.preventDefault();
+    if (step > 0) {
+      setStep(step - 1); //Decrementa a etapa
+    }
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -36,8 +74,12 @@ const useForm = ({
   }
 
   return {
-      handleSubmit,
-  }
+    handleSubmit,
+    canProcede,
+    step,
+    nextStep,
+    previousStep,
+  };
 };
 
 export default useForm;
