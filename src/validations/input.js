@@ -220,6 +220,6 @@ export const useInput = (props) => {
     setValue,
     error,
     setError,
-    validate: () => validate(),
+    validate: (disabledErrors) => validate(disabledErrors),
   };
 };

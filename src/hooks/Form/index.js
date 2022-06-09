@@ -2,19 +2,23 @@ import * as React from "react";
 
 /**
  * @param {Object} props - Configurações do form
- * @param {[]} props.formFields - Uma lista dos campos gerados pelos hooks
+ * @param {string} props.stepMode - Pode ser "onChange", caso você deseje utilizar o canProceed como gatilho condicional
+ * @param {boolean} props.stepClearFieldsOnBack - A função previousStep limpa os campos da etapa respectiva
+ * @param {Object} props.stepFields - Um objeto contendo uma lista de campos para cada etapa do formulário
+ * @param {Array} props.formFields - Uma lista dos campos gerados pelos hooks
  * @param {boolean} props.clearFields - Limpar os campos do formulário ao enviar
  * @param {() => void} props.submitCallback - Função, recebe formData como parâmetro padrão via callback
  */
-const useForm = ({
+export const useForm = ({
   formFields,
   stepMode,
+  stepClearFieldsOnBack,
   stepFields,
   clearFields,
   submitCallback,
 }) => {
   const [step, setStep] = React.useState(0);
-  const [canProcede, setCanProcede] = React.useState(false);
+  const [canProceed, setCanProceed] = React.useState(false);
 
   if (stepFields) {
     React.useEffect(() => {
@@ -23,12 +27,12 @@ const useForm = ({
           field.validate(true)
         );
         if (validationList.every((validation) => validation)) {
-          setCanProcede(true);
+          setCanProceed(true);
         } else {
-          setCanProcede(false);
+          setCanProceed(false);
         }
       }
-    }, [...stepFields[step].map(field => field.value)]);
+    }, stepFields[step].map(field => field.value));
   }
 
   function nextStep(event) {
@@ -43,6 +47,12 @@ const useForm = ({
   function previousStep(event) {
     event.preventDefault();
     if (step > 0) {
+      if(stepClearFieldsOnBack){
+        stepFields[step].forEach((field) => {
+          const initialValue = field.type === "checkbox" ? false : "";
+          field.setValue(initialValue);
+        });
+      }
       setStep(step - 1); //Decrementa a etapa
     }
   }
@@ -69,17 +79,17 @@ const useForm = ({
           const initialValue = field.type === "checkbox" ? false : "";
           field.setValue(initialValue);
         });
+        //Reinicia etapas
+        setStep(0);
       }
     }
   }
 
   return {
     handleSubmit,
-    canProcede,
+    canProceed,
     step,
     nextStep,
     previousStep,
   };
 };
-
-export default useForm;

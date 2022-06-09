@@ -87,8 +87,8 @@ var useSelect = function useSelect(props) {
     setValue: setValue,
     error: error,
     setError: setError,
-    validate: function validate() {
-      return _validate();
+    validate: function validate(disabledErrors) {
+      return _validate(disabledErrors);
     }
   };
 };
