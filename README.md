@@ -2,7 +2,7 @@
 
 ## Notas de atualização
 
-### 1.1.1
+## 1.1.1
 
 - Fix Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
