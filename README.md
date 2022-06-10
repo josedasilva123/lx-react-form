@@ -4,7 +4,7 @@
 
 ## 1.1.3
 
-- Fix Correção de pequenos bugs
+- Fix: Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
 
 ### 1.0.2
