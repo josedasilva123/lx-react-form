@@ -5,13 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d ."
+    "babel": "babel src -d .",
+    "build": "rollup -c"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.2",
-    "@babel/preset-env": "^7.18.2"
-  }
+    "@babel/preset-env": "^7.18.2",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
+    "rollup": "^2.75.6",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {}
 }

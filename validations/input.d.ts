@@ -1,0 +1,51 @@
+import * as React from "react";
+interface iValidation {
+    regex: RegExp;
+    error: string;
+}
+interface iMaskExpression {
+    regex: RegExp;
+    replace: string;
+}
+interface iMask {
+    expressions: iMaskExpression[];
+}
+interface iInputErrorText {
+    required?: string;
+    minLength?: string;
+    same?: string;
+}
+interface iUseInputProps {
+    optional?: boolean;
+    name: string;
+    initialValue?: string;
+    validation?: 'email' | 'cep' | 'senha' | 'telefone';
+    mask?: 'cep' | 'cpf' | 'cnpj' | 'telefone' | 'inteiros';
+    customValidation?: iValidation;
+    customMask?: iMask;
+    same?: string;
+    minLength?: number;
+    errorText: iInputErrorText;
+}
+interface iUseInputInputProps {
+    value: string;
+    name: string;
+    onChange: (event: React.SyntheticEvent) => void;
+    onKeyUp: () => void;
+    onBlur: () => void;
+}
+interface iUseInputReturn {
+    inputProps: iUseInputInputProps;
+    type: "input";
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+    error: string | null;
+    setError: React.Dispatch<React.SetStateAction<string | null>>;
+    validate: (disabledErrors?: boolean) => void;
+}
+declare type tUseInput = (props: iUseInputProps) => iUseInputReturn;
+/**
+ * hook de validação de input (text, email, password)
+ */
+export declare const useInput: tUseInput;
+export {};

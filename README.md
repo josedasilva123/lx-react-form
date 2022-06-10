@@ -2,6 +2,10 @@
 
 ## Notas de atualização
 
+## 1.2.0
+
+- Refactor: Código raiz refatorado para Typescript
+
 ## 1.1.3
 
 - Fix Correção de pequenos bugs

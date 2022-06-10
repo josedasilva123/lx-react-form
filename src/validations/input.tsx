@@ -1,6 +1,35 @@
 import * as React from "react";
 
-const validations = {
+interface iValidation{
+  regex: RegExp;
+  error: string;
+}
+
+interface iMaskExpression{
+  regex: RegExp;
+  replace: string;
+}
+
+interface iMask{
+  expressions: iMaskExpression[];
+}
+
+interface iValidationList{
+  email: iValidation;
+  cep: iValidation;
+  senha: iValidation;
+  telefone: iValidation;
+}
+
+interface iMaskList{
+  cep: iMask;
+  cpf: iMask;
+  cnpj: iMask;
+  telefone: iMask;
+  inteiros: iMask;
+}
+
+const validations: iValidationList = {
   email: {
     regex:
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
@@ -12,8 +41,7 @@ const validations = {
   },
   senha: {
     regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-    message:
-      "A senha precisa ter no mínimo 8 caracteres, pelo menos 1 número, uma 1 letra maiúscula e 1 minúscula.",
+    error: "A senha precisa ter no mínimo 8 caracteres, pelo menos 1 número, uma 1 letra maiúscula e 1 minúscula.",
   },
   telefone: {
     regex: /^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/,
@@ -21,7 +49,7 @@ const validations = {
   },
 };
 
-const masks = {
+const masks: iMaskList = {
   cep: {
     expressions: [
       {
@@ -113,31 +141,62 @@ const masks = {
   },
 };
 
+interface iInputErrorText{
+  required?: string;
+  minLength?: string;
+  same?: string;
+}
+
+interface iUseInputProps{
+  optional?: boolean;
+  name: string;
+  initialValue?: string;
+  validation?: 'email' | 'cep' | 'senha' | 'telefone';
+  mask?: 'cep' | 'cpf' | 'cnpj' | 'telefone' | 'inteiros';
+  customValidation?: iValidation;
+  customMask?: iMask;
+  same?: string;
+  minLength?:  number;
+  errorText: iInputErrorText;
+}
+
+interface iUseInputInputProps{
+  value: string;
+  name: string;
+  onChange: (event: React.SyntheticEvent) => void;
+  onKeyUp: () => void;
+  onBlur: () => void;
+}
+
+interface iUseInputReturn{
+  inputProps: iUseInputInputProps;
+  type: "input",
+  value: string,
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  error: string | null,
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  validate: (disabledErrors?: boolean) => void;
+}
+
+type tUseInput = (
+  props: iUseInputProps,
+) => iUseInputReturn;
+
 /**
- * @param {Object} props - Configurações do input
- * @param {boolean} props.optional - É opcional ou não (false por padrão)
- * @param {string} props.name - Nome do campo
- * @param {string} props.initialValue - Valor inicial
- * @param {string} props.validation - Tipo de validação do campo  (email, cep, senha ou telefone)
- * @param {string} props.mask - Máscara do campo (cep, cpf, cnpj, telefone, inteiros)
- * @param {Object} props.customValidation - Validação personalizada, precisa de um regex + error
- * @param {Object} props.customMask - Mascará personalizada, precisa uma lista expressions + clear
- * @param {string} props.same - Compara o valor de um campo com outro, exigindo que os mesmos correspondam
- * @param {number} props.minLength - Quatidade de dígitos mínimos necessários
- * @param {Object} props.errorText - Permite a configuração dos textos de erro
+ * hook de validação de input (text, email, password)
  */
-export const useInput = (props) => {
+export const useInput: tUseInput = (props) => {
   const initialValue = props?.initialValue || "";
-  const [value, setValue] = React.useState(initialValue);
-  const [error, setError] = React.useState(null);
+  const [value, setValue] = React.useState<string>(initialValue);
+  const [error, setError] = React.useState<string | null>(null);
 
   /**
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
    */
-  const validate = (disabledErrors) => {
+  const validate = (disabledErrors?: boolean) => {
     
     // Atribui o erro ao estado caso o controle esteja habilitado
-    function setValidateError(errorText) {
+    function setValidateError(errorText: string) {
       if (!disabledErrors) {
         setError(errorText);
       }
@@ -187,18 +246,19 @@ export const useInput = (props) => {
 
   const maskInput = () => {
     if (props?.customMask || props?.mask) {
-      const currentMask = props?.customMask || masks[props?.mask];
+      const currentMask = props?.customMask || (props?.mask && masks[props?.mask]);
       let newValue = value;
-      currentMask.expressions.forEach((expression) => {
+      currentMask?.expressions.forEach((expression) => {
         newValue = newValue.replace(expression.regex, expression.replace);
       });
       setValue(newValue);
     }
   };
 
-  const onChange = (event) => {
+  const onChange = (event: React.SyntheticEvent) => {
     if (error) validate();
-    setValue(event.target.value);
+    const target = event.target as HTMLInputElement;
+    setValue(target.value);
   };
 
   const onKeyUp = () => {
