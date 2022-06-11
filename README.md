@@ -2,21 +2,21 @@
 
 ## Notas de atualização
 
-## 1.2.1
+### 1.2.1
 
 - Feat: melhorando comportamento de validação
 
-## 1.2.0
+### 1.2.0
 
 - Refactor: Código raiz refatorado para Typescript
 - Feat: novos hooks useCheckboxGroup, useRadio e useNumber
 
-## 1.1.3
+### 1.1.3
 
 - Fix Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
 
-## 1.0.2
+### 1.0.2
 
 - Fix: (Essencial) Correção de bugs que impediam o envio de select e checkbox na função handleSubmit
 
