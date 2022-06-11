@@ -2,14 +2,19 @@
 
 ## Notas de atualização
 
-## 1.1.3
+### 1.2.0
+
+- Refactor: Código raiz refatorado para Typescript
+- Feat: criando useCheckboxGroup, useRadio e useNumber
+
+### 1.1.3
 
 - Fix: Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
 
 ### 1.0.2
-- Fix: (Essencial) Correção de bugs que impediam o envio de select e checkbox na função handleSubmit
 
+- Fix: (Essencial) Correção de bugs que impediam o envio de select e checkbox na função handleSubmit
 
 O LX React Form é uma biblioteca brasileira de formulários para React criado em formato de hook.
 
@@ -217,6 +222,39 @@ return (
 );
 ```
 
+## (useNumber) - hook para validar input núméricos
+
+Você pode validar input númericos com `useNumber`
+
+```jsx
+import { useNumber } from "lx-react-form";
+
+const age = useNumber({
+  name: "age",
+  min: 18,
+  max: 65,
+});
+
+return (
+  <form>
+    <input type="number" {...age.inputProps} />
+    {age.error && <p>{age.error}</p>}
+  </form>
+);
+```
+
+Confira todas as opções disponíveis para o hook `useNumber`
+
+| Opções       | Obrigatório | Descrição                                                                             |
+| ------------ | ----------- | ------------------------------------------------------------------------------------- |
+| name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| min          | Não         | Número mínimo                                                                         |
+| max          | Não         | Número máximo                                                                         |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| initialValue | Não         | Define um valor inicial para o campo                                                  |
+| errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required, min e max`               |
+
 ## (useCheckbox) - Validações de checkbox (type checkbox)
 
 Você pode validar checkbox com o hook `useCheckbox`
@@ -246,6 +284,128 @@ Confira abaixo todas as opções disponíveis para o hook `useCheckbox`
 | name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
 | optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
 | initialValue | Não         | Define um valor inicial para o campo (precisa ser obrigatoriamente `true` ou `false`) |
+| errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
+
+## (useCheckboxGroup) - hook para validar multiplos grupos de checkbox
+
+Você pode validar grupos de checkbox com `useCheckboxGroup` (considerando o grupo com um único item do formulário)
+
+```jsx
+import { useCheckboxGroup } from "lx-react-form";
+
+const categories = useCheckboxGroup({
+  initialValue: ["acao"],
+  name: "categories",
+  min: 1,
+  max: 3,
+});
+
+return (
+  <form>
+    <div>
+      <label>
+        Ação
+        <input
+          type="checkbox"
+          value="acao"
+          {...categories.inputProps}
+          checked={categories.includes("acao") ? true : false}
+        />
+      </label>
+
+      <label>
+        Comédia
+        <input
+          type="checkbox"
+          value="comedia"
+          {...categories.inputProps}
+          checked={categories.includes("comedia") ? true : false}
+        />
+      </label>
+
+      <label>
+        Drama
+        <input
+          type="checkbox"
+          value="drama"
+          {...categories.inputProps}
+          checked={categories.includes("drama") ? true : false}
+        />
+      </label>
+
+      <label>
+        Terror
+        <input
+          type="checkbox"
+          value="terror"
+          {...categories.inputProps}
+          checked={categories.includes("terror") ? true : false}
+        />
+      </label>
+    </div>
+    {categories.error && <p>{categories.error}</p>}
+  </form>
+);
+```
+
+Confira todas as opções disponíveis para o hook `useCheckboxGroup`
+
+| Opções       | Obrigatório | Descrição                                                                             |
+| ------------ | ----------- | ------------------------------------------------------------------------------------- |
+| name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| min          | Não         | Número mínimo necessário de checkbox marcados                                         |
+| max          | Não         | Número máximo necessário de checkbox marcados                                         |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| initialValue | Não         | Define um valor inicial para o campo                                                  |
+| errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required, min e max`               |
+
+## (useRadio) - hook para validar grupos de radio
+
+Você pode validar grupos de radio com `useRadio` (considerando o grupo com um único item do formulário)
+
+```jsx
+import { useRadio } from "lx-react-form";
+
+const biscuit = useCheckboxGroup({
+  name: "biscuit",
+});
+
+return (
+  <form>
+    <div>
+      <label>
+        Bolacha
+        <input
+          type="radio"
+          value="bolacha"
+          {...biscuit.inputProps}
+          checked={biscuit.includes("bolacha") ? true : false}
+        />
+      </label>
+
+      <label>
+        Biscoito
+        <input
+          type="radio"
+          value="biscoito"
+          {...biscuit.inputProps}
+          checked={biscuit.includes("biscoito") ? true : false}
+        />
+      </label>
+    </div>
+    {biscuit.error && <p>{biscuit.error}</p>}
+  </form>
+);
+```
+
+Confira todas as opções disponíveis para o hook `useRadio`
+
+| Opções       | Obrigatório | Descrição                                                                             |
+| ------------ | ----------- | ------------------------------------------------------------------------------------- |
+| name         | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
+| optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| initialValue | Não         | Define um valor inicial para o campo                                                  |
 | errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required`                          |
 
 ## (useSelect) - Validações de select
@@ -378,16 +538,16 @@ return (
         <button type="submit">Enviar</button>
       </>
     )}
-   
+
   </form>
 );
 ```
 
-| Opções         | Obrigatório | Descrição                                                                                                             |
-| -------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
-| stepFields    | Sim\*         | Um objeto contendo uma lista de campos para cada etapa do formulário                                                    |
-| stepMode     | Não       | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos)     |
-| stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva |
+| Opções                | Obrigatório | Descrição                                                                                                                                                                                                                          |
+| --------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| stepFields            | Sim\*       | Um objeto contendo uma lista de campos para cada etapa do formulário                                                                                                                                                               |
+| stepMode              | Não         | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos) |
+| stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva                                                                                                                                                                          |
 
 ### Exemplo de etapas com stepMode onChange
 
@@ -451,7 +611,7 @@ return (
           <button type="submit">Enviar</button>
         )}
       </>
-    )}   
+    )}
   </form>
 );
 ```

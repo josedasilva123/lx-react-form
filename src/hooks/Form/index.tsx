@@ -1,15 +1,30 @@
 import * as React from "react";
 
+interface iUseFormProps{
+  formFields: any[],
+  stepMode?: 'onChange',
+  stepClearFieldsOnBack?: boolean,
+  stepFields?: any;
+  clearFields?: boolean;
+  submitCallback: (formData: any) => void;
+}
+
+interface iUseFormReturn{
+  handleSubmit: (event: React.SyntheticEvent) => void;
+  canProceed: boolean;
+  step: number;
+  nextStep: (event: React.SyntheticEvent) => void;
+  previousStep: (event: React.SyntheticEvent) => void;
+}
+
+type tUseForm = (
+ props: iUseFormProps,
+) => iUseFormReturn;
+
 /**
- * @param {Object} props - Configurações do form
- * @param {string} props.stepMode - Pode ser "onChange", caso você deseje utilizar o canProceed como gatilho condicional
- * @param {boolean} props.stepClearFieldsOnBack - A função previousStep limpa os campos da etapa respectiva
- * @param {Object} props.stepFields - Um objeto contendo uma lista de campos para cada etapa do formulário
- * @param {Array} props.formFields - Uma lista dos campos gerados pelos hooks
- * @param {boolean} props.clearFields - Limpar os campos do formulário ao enviar
- * @param {() => void} props.submitCallback - Função, recebe formData como parâmetro padrão via callback
+ * hook para formulários
  */
-export const useForm = ({
+export const useForm: tUseForm = ({
   formFields,
   stepMode,
   stepClearFieldsOnBack,
@@ -23,32 +38,32 @@ export const useForm = ({
   if (stepFields) {
     React.useEffect(() => {
       if (stepMode === "onChange" && stepFields) {
-        const validationList = stepFields?.[step].map((field) =>
+        const validationList = stepFields?.[step].map((field: any) =>
           field.validate(true)
         );
-        if (validationList.every((validation) => validation)) {
+        if (validationList.every((validation: boolean) => validation)) {
           setCanProceed(true);
         } else {
           setCanProceed(false);
         }
       }
-    }, stepFields[step].map(field => field.value));
+    }, [stepFields[step].map((field: any) => field.value)]);
   }
 
-  function nextStep(event) {
+  function nextStep(event: React.SyntheticEvent) {
     event.preventDefault();
     //Executa todas as validações na etapa atual
-    const validationList = stepFields?.[step].map((field) => field.validate());
-    if (validationList.every((validation) => validation)) {
+    const validationList = stepFields?.[step].map((field: any) => field.validate());
+    if (validationList.every((validation: boolean) => validation)) {
       setStep(step + 1); //Incrementa a etapa
     }
   }
 
-  function previousStep(event) {
+  function previousStep(event: React.SyntheticEvent) {
     event.preventDefault();
     if (step > 0) {
       if(stepClearFieldsOnBack){
-        stepFields[step].forEach((field) => {
+        stepFields[step].forEach((field: any) => {
           const initialValue = field.type === "checkbox" ? false : "";
           field.setValue(initialValue);
         });
@@ -57,7 +72,7 @@ export const useForm = ({
     }
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
 
     //Executa todas as validações
@@ -67,7 +82,7 @@ export const useForm = ({
     if (validationList.every((validation) => validation)) {
       //Condensa os valores dos campos um objeto data (LX Hook Form)
       const formData = formFields.reduce((dataObject, currentItem) => {
-        dataObject[currentItem.inputProps.name] = currentItem.inputProps.value;
+        dataObject[currentItem.inputProps.name] = currentItem.value;
         return dataObject;
       }, {});
 
@@ -76,7 +91,17 @@ export const useForm = ({
       //Função de limpeza de campos
       if (clearFields) {
         formFields.forEach((field) => {
-          const initialValue = field.type === "checkbox" ? false : "";
+          function resetValue(){
+            switch(field.type){
+              case "checkbox":
+                return field.initialValue || false;
+              case "checkboxgroup":
+                return field.initialValue || [];  
+              default: 
+                return field.initialValue || "";  
+            }
+          }
+          const initialValue = resetValue();
           field.setValue(initialValue);
         });
         //Reinicia etapas
