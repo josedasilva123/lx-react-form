@@ -1,18 +1,5 @@
 import * as React from "react";
-
-interface iValidation{
-  regex: RegExp;
-  error: string;
-}
-
-interface iMaskExpression{
-  regex: RegExp;
-  replace: string;
-}
-
-interface iMask{
-  expressions: iMaskExpression[];
-}
+import { iMask, iValidation } from "./types/global";
 
 interface iValidationList{
   email: iValidation;
@@ -157,7 +144,7 @@ interface iUseInputProps{
   customMask?: iMask;
   same?: string;
   minLength?:  number;
-  errorText: iInputErrorText;
+  errorText?: iInputErrorText;
 }
 
 interface iUseInputInputProps{
@@ -173,6 +160,7 @@ interface iUseInputReturn{
   type: "input",
   value: string,
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  initialValue: string;
   error: string | null,
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   validate: (disabledErrors?: boolean) => void;
@@ -229,7 +217,6 @@ export const useInput: tUseInput = (props) => {
     ) {
       setValidateError(validations[props?.validation].error);
       return false;
-
     //Validação de Regex Custom
     } else if (
       props?.customValidation &&
@@ -237,7 +224,6 @@ export const useInput: tUseInput = (props) => {
     ) {
       setValidateError(props?.customValidation.error);
       return false;
-
     } else {
       setError(null);
       return true;
@@ -259,6 +245,7 @@ export const useInput: tUseInput = (props) => {
     if (error) validate();
     const target = event.target as HTMLInputElement;
     setValue(target.value);
+  
   };
 
   const onKeyUp = () => {
@@ -278,6 +265,7 @@ export const useInput: tUseInput = (props) => {
     type: "input",
     value,
     setValue,
+    initialValue,
     error,
     setError,
     validate: (disabledErrors) => validate(disabledErrors),

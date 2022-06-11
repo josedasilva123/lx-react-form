@@ -47,7 +47,7 @@ export const useForm: tUseForm = ({
           setCanProceed(false);
         }
       }
-    }, stepFields[step].map((field: any) => field.value));
+    }, [stepFields[step].map((field: any) => field.value)]);
   }
 
   function nextStep(event: React.SyntheticEvent) {
@@ -82,7 +82,7 @@ export const useForm: tUseForm = ({
     if (validationList.every((validation) => validation)) {
       //Condensa os valores dos campos um objeto data (LX Hook Form)
       const formData = formFields.reduce((dataObject, currentItem) => {
-        dataObject[currentItem.inputProps.name] = currentItem.inputProps.value;
+        dataObject[currentItem.inputProps.name] = currentItem.value;
         return dataObject;
       }, {});
 
@@ -91,7 +91,17 @@ export const useForm: tUseForm = ({
       //Função de limpeza de campos
       if (clearFields) {
         formFields.forEach((field) => {
-          const initialValue = field.type === "checkbox" ? false : "";
+          function resetValue(){
+            switch(field.type){
+              case "checkbox":
+                return field.initialValue || false;
+              case "checkboxgroup":
+                return field.initialValue || [];  
+              default: 
+                return field.initialValue || "";  
+            }
+          }
+          const initialValue = resetValue();
           field.setValue(initialValue);
         });
         //Reinicia etapas

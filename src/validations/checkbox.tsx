@@ -8,7 +8,7 @@ interface iUseCheckboxProps{
   optional?: boolean;
   name: string;
   initialValue?: boolean;
-  errorText: iCheckboxErrorText;
+  errorText?: iCheckboxErrorText;
 }
 
 interface iUseCheckboxInputProps{
@@ -22,6 +22,7 @@ interface iUseCheckboxReturn{
   type: "checkbox",
   value: boolean,
   setValue: React.Dispatch<React.SetStateAction<boolean>>;
+  initialValue?: boolean;
   error: string | null,
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   validate: (disabledErrors?: boolean) => void;
@@ -80,6 +81,7 @@ export const useCheckbox: tUseCheckbox = (props) => {
     type: "checkbox",
     value,
     setValue,
+    initialValue,
     error,
     setError,
     validate: (disabledErrors) => validate(disabledErrors),

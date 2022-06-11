@@ -8,7 +8,7 @@ interface iUseSelectProps{
   optional?: boolean;
   name: string;
   initialValue?: string;
-  errorText: iSelectErrorText;
+  errorText?: iSelectErrorText;
 }
 
 interface iUseSelectInputProps{
@@ -22,6 +22,7 @@ interface iUseSelectReturn{
   type: "select",
   value: string,
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  initialValue: string;
   error: string | null,
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   validate: (disabledErrors?: boolean) => void;
@@ -46,9 +47,11 @@ export const useSelect: tUseSelect = (props) => {
         setError("É necessário selecionar pelo menos um valor neste campo.");
       }
       return false;
+
     } else {
       setError(null);
       return true;
+
     }
   }
 
@@ -69,11 +72,11 @@ export const useSelect: tUseSelect = (props) => {
       value,
       name: props?.name,
       onChange,
-      error,
     },
     type: "select",
     value,
     setValue,
+    initialValue,
     error,
     setError,
     validate: (disabledErrors) => validate(disabledErrors),
