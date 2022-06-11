@@ -2,10 +2,14 @@
 
 ## Notas de atualização
 
+## 1.2.1
+
+- Feat: melhorando comportamento de validação
+
 ## 1.2.0
 
 - Refactor: Código raiz refatorado para Typescript
-- Feat: criando useCheckboxGroup, useRadio e useNumber
+- Feat: novos hooks useCheckboxGroup, useRadio e useNumber
 
 ## 1.1.3
 
