@@ -63,7 +63,6 @@ export const useRadio: tUseRadio = (props) => {
   const onChange = (event: React.SyntheticEvent) => {
     const target = event.currentTarget as HTMLInputElement;
     if (target.checked || props?.optional) {
-      console.log(target.value);
       setValue(target.value);
       setError(null);
     }

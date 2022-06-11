@@ -77,9 +77,7 @@ export const useNumber: tUseNumber = (props) => {
 
     const minNumber = props?.min || 0;
     const maxNumber = props?.max;
-    console.log(minNumber);
-    console.log(maxNumber);
-
+    
     // Atribui o erro ao estado caso o controle esteja habilitado
     function setValidateError(errorText: string) {
       if (!disabledErrors) {
@@ -104,7 +102,7 @@ export const useNumber: tUseNumber = (props) => {
         props?.errorText?.max || `O valor não pode ultrapassar ${maxNumber}.`
       );
       return false;
-      
+
     } else {
       setError(null);
       return true;

@@ -58,7 +58,6 @@ export const useSelect: tUseSelect = (props) => {
   const onChange = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
     if (target.value || props?.optional) {
-      console.log(target.value);
       setValue(target.value);
       setError(null);
     } else {
