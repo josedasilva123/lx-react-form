@@ -65,7 +65,7 @@ export const useNumber: tUseNumber = (props) => {
   React.useEffect(() => {
     //Caso não haja limite máximo
     if (value) {
-      validate();
+      if(error) validate();
     }
   }, [value]);
 
@@ -110,7 +110,6 @@ export const useNumber: tUseNumber = (props) => {
   }
 
   const onChange = (event: React.SyntheticEvent) => {
-    if (error) validate();
     const target = event.target as HTMLInputElement;
     setValue(target.value);
   };

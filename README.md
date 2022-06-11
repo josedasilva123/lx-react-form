@@ -2,14 +2,18 @@
 
 ## Notas de atualização
 
+### 1.2.1
+
+- Feat: melhorando comportamento de validação
+
 ### 1.2.0
 
 - Refactor: Código raiz refatorado para Typescript
-- Feat: criando useCheckboxGroup, useRadio e useNumber
+- Feat: novos hooks useCheckboxGroup, useRadio e useNumber
 
 ### 1.1.3
 
-- Fix: Correção de pequenos bugs
+- Fix Correção de pequenos bugs
 - Feat: Lançamento da feature de steps (formulários em etapa)
 
 ### 1.0.2
@@ -479,7 +483,7 @@ return (
 
 ## Formulários de etapas - uso avançado do useForm
 
-Com o `useForm` é possível, além da criação de formulários convencionais, formulários com etapas
+Com o useForm é possível, além da criação de formulários convencionais, formulários com etapas
 
 ```jsx
 import { useForm, useInput } from "lx-react-form";

@@ -178,6 +178,10 @@ export const useInput: tUseInput = (props) => {
   const [value, setValue] = React.useState<string>(initialValue);
   const [error, setError] = React.useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (error) validate();
+  }, [value])
+
   /**
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
    */
@@ -242,7 +246,6 @@ export const useInput: tUseInput = (props) => {
   };
 
   const onChange = (event: React.SyntheticEvent) => {
-    if (error) validate();
     const target = event.target as HTMLInputElement;
     setValue(target.value);
   
