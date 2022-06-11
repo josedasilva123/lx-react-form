@@ -138,6 +138,10 @@ var useInput = function (props) {
     var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || "";
     var _a = React__namespace.useState(initialValue), value = _a[0], setValue = _a[1];
     var _b = React__namespace.useState(null), error = _b[0], setError = _b[1];
+    React__namespace.useEffect(function () {
+        if (error)
+            validate();
+    }, [value]);
     /**
      * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
      */
@@ -195,8 +199,6 @@ var useInput = function (props) {
         }
     };
     var onChange = function (event) {
-        if (error)
-            validate();
         var target = event.target;
         setValue(target.value);
     };
@@ -300,7 +302,6 @@ var useSelect = function (props) {
     var onChange = function (event) {
         var target = event.target;
         if (target.value || (props === null || props === void 0 ? void 0 : props.optional)) {
-            console.log(target.value);
             setValue(target.value);
             setError(null);
         }
@@ -353,7 +354,6 @@ var useRadio = function (props) {
     var onChange = function (event) {
         var target = event.currentTarget;
         if (target.checked || (props === null || props === void 0 ? void 0 : props.optional)) {
-            console.log(target.value);
             setValue(target.value);
             setError(null);
         }
@@ -591,7 +591,8 @@ var useNumber = function (props) {
     React__namespace.useEffect(function () {
         //Caso não haja limite máximo
         if (value) {
-            validate();
+            if (error)
+                validate();
         }
     }, [value]);
     /**
@@ -603,8 +604,6 @@ var useNumber = function (props) {
             return true;
         var minNumber = (props === null || props === void 0 ? void 0 : props.min) || 0;
         var maxNumber = props === null || props === void 0 ? void 0 : props.max;
-        console.log(minNumber);
-        console.log(maxNumber);
         // Atribui o erro ao estado caso o controle esteja habilitado
         function setValidateError(errorText) {
             if (!disabledErrors) {
@@ -616,12 +615,12 @@ var useNumber = function (props) {
             return false;
             //Verica valor mínimo
         }
-        else if (+value.replace(',', '.') < minNumber) {
+        else if (+value.replace(",", ".") < minNumber) {
             setValidateError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.min) || "O valor precisar ser no m\u00EDnimo ".concat(minNumber, "."));
             return false;
-            //Verifica valor máximo  
+            //Verifica valor máximo
         }
-        else if (maxNumber && +value.replace(',', '.') > maxNumber) {
+        else if (maxNumber && +value.replace(",", ".") > maxNumber) {
             setValidateError(((_c = props === null || props === void 0 ? void 0 : props.errorText) === null || _c === void 0 ? void 0 : _c.max) || "O valor n\u00E3o pode ultrapassar ".concat(maxNumber, "."));
             return false;
         }
@@ -631,8 +630,6 @@ var useNumber = function (props) {
         }
     }
     var onChange = function (event) {
-        if (error)
-            validate();
         var target = event.target;
         setValue(target.value);
     };
