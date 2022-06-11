@@ -1,15 +1,5 @@
 import * as React from "react";
-interface iValidation {
-    regex: RegExp;
-    error: string;
-}
-interface iMaskExpression {
-    regex: RegExp;
-    replace: string;
-}
-interface iMask {
-    expressions: iMaskExpression[];
-}
+import { iMask, iValidation } from "./types/global";
 interface iInputErrorText {
     required?: string;
     minLength?: string;
@@ -25,7 +15,7 @@ interface iUseInputProps {
     customMask?: iMask;
     same?: string;
     minLength?: number;
-    errorText: iInputErrorText;
+    errorText?: iInputErrorText;
 }
 interface iUseInputInputProps {
     value: string;
@@ -39,6 +29,7 @@ interface iUseInputReturn {
     type: "input";
     value: string;
     setValue: React.Dispatch<React.SetStateAction<string>>;
+    initialValue: string;
     error: string | null;
     setError: React.Dispatch<React.SetStateAction<string | null>>;
     validate: (disabledErrors?: boolean) => void;

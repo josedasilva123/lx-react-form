@@ -1,21 +1,20 @@
 import * as React from "react";
-interface iSelectErrorText {
+interface iRadioErrorText {
     required?: string;
 }
-interface iUseSelectProps {
+interface iUseRadioProps {
     optional?: boolean;
     name: string;
     initialValue?: string;
-    errorText?: iSelectErrorText;
+    errorText?: iRadioErrorText;
 }
-interface iUseSelectInputProps {
-    value: string;
+interface iUseRadioInputProps {
     name: string;
     onChange: (event: React.SyntheticEvent) => void;
 }
-interface iUseSelectReturn {
-    inputProps: iUseSelectInputProps;
-    type: "select";
+interface iUseRadioReturn {
+    inputProps: iUseRadioInputProps;
+    type: "radio";
     value: string;
     setValue: React.Dispatch<React.SetStateAction<string>>;
     initialValue: string;
@@ -23,6 +22,9 @@ interface iUseSelectReturn {
     setError: React.Dispatch<React.SetStateAction<string | null>>;
     validate: (disabledErrors?: boolean) => void;
 }
-declare type tUseSelect = (props: iUseSelectProps) => iUseSelectReturn;
-export declare const useSelect: tUseSelect;
+declare type tUseRadio = (props: iUseRadioProps) => iUseRadioReturn;
+/**
+ * hook para validação de radio
+ */
+export declare const useRadio: tUseRadio;
 export {};

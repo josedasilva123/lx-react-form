@@ -40,7 +40,7 @@ var validations = {
         error: "Digite um telefone ou celular válido",
     },
 };
-var masks = {
+var masks$1 = {
     cep: {
         expressions: [
             {
@@ -186,7 +186,7 @@ var useInput = function (props) {
     };
     var maskInput = function () {
         if ((props === null || props === void 0 ? void 0 : props.customMask) || (props === null || props === void 0 ? void 0 : props.mask)) {
-            var currentMask = (props === null || props === void 0 ? void 0 : props.customMask) || ((props === null || props === void 0 ? void 0 : props.mask) && masks[props === null || props === void 0 ? void 0 : props.mask]);
+            var currentMask = (props === null || props === void 0 ? void 0 : props.customMask) || ((props === null || props === void 0 ? void 0 : props.mask) && masks$1[props === null || props === void 0 ? void 0 : props.mask]);
             var newValue_1 = value;
             currentMask === null || currentMask === void 0 ? void 0 : currentMask.expressions.forEach(function (expression) {
                 newValue_1 = newValue_1.replace(expression.regex, expression.replace);
@@ -216,6 +216,7 @@ var useInput = function (props) {
         type: "input",
         value: value,
         setValue: setValue,
+        initialValue: initialValue,
         error: error,
         setError: setError,
         validate: function (disabledErrors) { return validate(disabledErrors); },
@@ -268,6 +269,7 @@ var useCheckbox = function (props) {
         type: "checkbox",
         value: value,
         setValue: setValue,
+        initialValue: initialValue,
         error: error,
         setError: setError,
         validate: function (disabledErrors) { return validate(disabledErrors); },
@@ -312,11 +314,171 @@ var useSelect = function (props) {
             value: value,
             name: props === null || props === void 0 ? void 0 : props.name,
             onChange: onChange,
-            error: error,
         },
         type: "select",
         value: value,
         setValue: setValue,
+        initialValue: initialValue,
+        error: error,
+        setError: setError,
+        validate: function (disabledErrors) { return validate(disabledErrors); },
+    };
+};
+
+/**
+ * hook para validação de radio
+ */
+var useRadio = function (props) {
+    var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || "";
+    var _a = React__namespace.useState(initialValue), value = _a[0], setValue = _a[1];
+    var _b = React__namespace.useState(null), error = _b[0], setError = _b[1];
+    /**
+     * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+     */
+    var validate = function (disabledErrors) {
+        var _a;
+        if (props === null || props === void 0 ? void 0 : props.optional)
+            return true;
+        if (!value) {
+            if (!disabledErrors) {
+                setError(((_a = props.errorText) === null || _a === void 0 ? void 0 : _a.required) || "Marcar esta caixa é obrigátorio.");
+            }
+            return false;
+        }
+        else {
+            setError(null);
+            return true;
+        }
+    };
+    var onChange = function (event) {
+        var target = event.currentTarget;
+        if (target.checked || (props === null || props === void 0 ? void 0 : props.optional)) {
+            console.log(target.value);
+            setValue(target.value);
+            setError(null);
+        }
+    };
+    return {
+        inputProps: {
+            name: props === null || props === void 0 ? void 0 : props.name,
+            onChange: onChange,
+        },
+        type: "radio",
+        value: value,
+        setValue: setValue,
+        initialValue: initialValue,
+        error: error,
+        setError: setError,
+        validate: function (disabledErrors) { return validate(disabledErrors); },
+    };
+};
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+/**
+ * hook para validação de grupos de checkbox
+ */
+var useCheckboxGroup = function (props) {
+    var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || [];
+    var _a = React__namespace.useState(false), firstChange = _a[0], setFirstChange = _a[1];
+    var _b = React__namespace.useState(initialValue), value = _b[0], setValue = _b[1];
+    var _c = React__namespace.useState(null), error = _c[0], setError = _c[1];
+    var minChecks = (props === null || props === void 0 ? void 0 : props.min) || 1;
+    var maxChecks = (props === null || props === void 0 ? void 0 : props.max) || false;
+    React__namespace.useEffect(function () {
+        var _a, _b;
+        //Caso não haja limite máximo
+        if (firstChange) {
+            if (value.length < minChecks && !maxChecks) {
+                setError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.min) ||
+                    "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " ").concat(minChecks === 1 ? "opção" : "opções", "."));
+                //Caso haja limite máximo
+            }
+            else if (value.length < minChecks || value.length > maxChecks) {
+                setError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.max) ||
+                    "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " e no m\u00E1ximo ").concat(maxChecks, " ").concat(minChecks === 1 ? "opção" : "opções"));
+            }
+        }
+    }, [value]);
+    /**
+     * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+     */
+    var validate = function (disabledErrors) {
+        var _a, _b;
+        if (props === null || props === void 0 ? void 0 : props.optional)
+            return true;
+        // Atribui o erro ao estado caso o controle esteja habilitado
+        function setValidateError(errorText) {
+            if (!disabledErrors) {
+                setError(errorText);
+            }
+        }
+        //Caso não haja limite máximo
+        if (value.length < minChecks && !maxChecks) {
+            setValidateError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.min) ||
+                "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " ").concat(minChecks === 1 ? "opção" : "opções", "."));
+            return false;
+            //Caso haja limite máximo
+        }
+        else if (value.length < minChecks || value.length > maxChecks) {
+            setValidateError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.max) ||
+                "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " e no m\u00E1ximo ").concat(maxChecks, " ").concat(minChecks === 1 ? "opção" : "opções"));
+            return false;
+        }
+        else {
+            setError(null);
+            return true;
+        }
+    };
+    var onChange = function (event) {
+        var target = event.currentTarget;
+        if (target.checked || (props === null || props === void 0 ? void 0 : props.optional)) {
+            if (!value.find(function (v) { return v === target.value; })) {
+                var newValue = __spreadArray(__spreadArray([], value, true), [target.value], false);
+                setValue(newValue);
+            }
+            setError(null);
+        }
+        else {
+            var newValue = value.filter(function (v) { return v !== target.value; });
+            setValue(newValue);
+        }
+        //Declara primeira mudança
+        if (!firstChange)
+            setFirstChange(true);
+    };
+    return {
+        inputProps: {
+            name: props === null || props === void 0 ? void 0 : props.name,
+            onChange: onChange,
+        },
+        type: "checkboxgroup",
+        value: value,
+        setValue: setValue,
+        initialValue: initialValue,
         error: error,
         setError: setError,
         validate: function (disabledErrors) { return validate(disabledErrors); },
@@ -343,7 +505,7 @@ var useForm = function (_a) {
                     setCanProceed(false);
                 }
             }
-        }, stepFields[step].map(function (field) { return field.value; }));
+        }, [stepFields[step].map(function (field) { return field.value; })]);
     }
     function nextStep(event) {
         event.preventDefault();
@@ -373,14 +535,24 @@ var useForm = function (_a) {
         if (validationList.every(function (validation) { return validation; })) {
             //Condensa os valores dos campos um objeto data (LX Hook Form)
             var formData = formFields.reduce(function (dataObject, currentItem) {
-                dataObject[currentItem.inputProps.name] = currentItem.inputProps.value;
+                dataObject[currentItem.inputProps.name] = currentItem.value;
                 return dataObject;
             }, {});
             submitCallback(formData); //Executa função de callback passando o formData
             //Função de limpeza de campos
             if (clearFields) {
                 formFields.forEach(function (field) {
-                    var initialValue = field.type === "checkbox" ? false : "";
+                    function resetValue() {
+                        switch (field.type) {
+                            case "checkbox":
+                                return field.initialValue || false;
+                            case "checkboxgroup":
+                                return field.initialValue || [];
+                            default:
+                                return field.initialValue || "";
+                        }
+                    }
+                    var initialValue = resetValue();
                     field.setValue(initialValue);
                 });
                 //Reinicia etapas
@@ -397,8 +569,111 @@ var useForm = function (_a) {
     };
 };
 
+var masks = {
+    inteiros: {
+        expressions: [
+            {
+                regex: /\D/g,
+                replace: "",
+            },
+            {
+                regex: /(\d)$/,
+                replace: "$1",
+            },
+        ],
+        // clear: /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g,
+    },
+};
+var useNumber = function (props) {
+    var initialValue = (props === null || props === void 0 ? void 0 : props.initialValue) || "";
+    var _a = React__namespace.useState(initialValue), value = _a[0], setValue = _a[1];
+    var _b = React__namespace.useState(null), error = _b[0], setError = _b[1];
+    React__namespace.useEffect(function () {
+        //Caso não haja limite máximo
+        if (value) {
+            validate();
+        }
+    }, [value]);
+    /**
+     * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
+     */
+    function validate(disabledErrors) {
+        var _a, _b, _c;
+        if (props === null || props === void 0 ? void 0 : props.optional)
+            return true;
+        var minNumber = (props === null || props === void 0 ? void 0 : props.min) || 0;
+        var maxNumber = props === null || props === void 0 ? void 0 : props.max;
+        console.log(minNumber);
+        console.log(maxNumber);
+        // Atribui o erro ao estado caso o controle esteja habilitado
+        function setValidateError(errorText) {
+            if (!disabledErrors) {
+                setError(errorText);
+            }
+        }
+        if (!value) {
+            setValidateError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.required) || "Preencha um valor.");
+            return false;
+            //Verica valor mínimo
+        }
+        else if (+value.replace(',', '.') < minNumber) {
+            setValidateError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.min) || "O valor precisar ser no m\u00EDnimo ".concat(minNumber, "."));
+            return false;
+            //Verifica valor máximo  
+        }
+        else if (maxNumber && +value.replace(',', '.') > maxNumber) {
+            setValidateError(((_c = props === null || props === void 0 ? void 0 : props.errorText) === null || _c === void 0 ? void 0 : _c.max) || "O valor n\u00E3o pode ultrapassar ".concat(maxNumber, "."));
+            return false;
+        }
+        else {
+            setError(null);
+            return true;
+        }
+    }
+    var onChange = function (event) {
+        if (error)
+            validate();
+        var target = event.target;
+        setValue(target.value);
+    };
+    var maskInput = function () {
+        if ((props === null || props === void 0 ? void 0 : props.customMask) || (props === null || props === void 0 ? void 0 : props.mask)) {
+            var currentMask = (props === null || props === void 0 ? void 0 : props.customMask) || ((props === null || props === void 0 ? void 0 : props.mask) && masks[props === null || props === void 0 ? void 0 : props.mask]);
+            var newValue_1 = value;
+            currentMask === null || currentMask === void 0 ? void 0 : currentMask.expressions.forEach(function (expression) {
+                newValue_1 = newValue_1.replace(expression.regex, expression.replace);
+            });
+            setValue(newValue_1);
+        }
+    };
+    var onKeyUp = function () {
+        if ((props === null || props === void 0 ? void 0 : props.customMask) || (props === null || props === void 0 ? void 0 : props.mask)) {
+            maskInput();
+        }
+    };
+    return {
+        inputProps: {
+            value: value,
+            name: props === null || props === void 0 ? void 0 : props.name,
+            onChange: onChange,
+            onKeyUp: onKeyUp,
+            onBlur: function () { return validate(); },
+        },
+        type: "number",
+        value: value,
+        setValue: setValue,
+        initialValue: initialValue,
+        error: error,
+        setError: setError,
+        validate: function (disabledErrors) { return validate(disabledErrors); },
+    };
+};
+
 exports.useCheckbox = useCheckbox;
+exports.useCheckboxGroup = useCheckboxGroup;
 exports.useForm = useForm;
 exports.useInput = useInput;
+exports.useNumber = useNumber;
+exports.useRadio = useRadio;
 exports.useSelect = useSelect;
 //# sourceMappingURL=index.js.map
