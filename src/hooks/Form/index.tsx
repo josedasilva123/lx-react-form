@@ -1,15 +1,16 @@
 import * as React from "react";
 
-interface iUseFormProps{
-  formFields: any[],
-  stepMode?: 'onChange',
-  stepClearFieldsOnBack?: boolean,
+interface iUseFormProps {
+  formFields: any[];
+  stepMode?: "onChange";
+  stepClearFieldsOnBack?: boolean;
   stepFields?: any;
+  stepCallbacks?: any;
   clearFields?: boolean;
   submitCallback: (formData: any) => void;
 }
 
-interface iUseFormReturn{
+interface iUseFormReturn {
   handleSubmit: (event: React.SyntheticEvent) => void;
   canProceed: boolean;
   step: number;
@@ -17,9 +18,7 @@ interface iUseFormReturn{
   previousStep: (event: React.SyntheticEvent) => void;
 }
 
-type tUseForm = (
- props: iUseFormProps,
-) => iUseFormReturn;
+type tUseForm = (props: iUseFormProps) => iUseFormReturn;
 
 /**
  * hook para formulários
@@ -29,6 +28,7 @@ export const useForm: tUseForm = ({
   stepMode,
   stepClearFieldsOnBack,
   stepFields,
+  stepCallbacks,
   clearFields,
   submitCallback,
 }) => {
@@ -41,6 +41,7 @@ export const useForm: tUseForm = ({
         const validationList = stepFields?.[step].map((field: any) =>
           field.validate(true)
         );
+
         if (validationList.every((validation: boolean) => validation)) {
           setCanProceed(true);
         } else {
@@ -53,8 +54,17 @@ export const useForm: tUseForm = ({
   function nextStep(event: React.SyntheticEvent) {
     event.preventDefault();
     //Executa todas as validações na etapa atual
-    const validationList = stepFields?.[step].map((field: any) => field.validate());
+    const validationList = stepFields?.[step].map((field: any) =>
+      field.validate()
+    );
+
     if (validationList.every((validation: boolean) => validation)) {
+      const callback = stepCallbacks?.[step];
+
+      if (callback) {
+        callback(stepFields?.[step]); //Callback da respectiva etapa
+      }
+
       setStep(step + 1); //Incrementa a etapa
     }
   }
@@ -62,7 +72,7 @@ export const useForm: tUseForm = ({
   function previousStep(event: React.SyntheticEvent) {
     event.preventDefault();
     if (step > 0) {
-      if(stepClearFieldsOnBack){
+      if (stepClearFieldsOnBack) {
         stepFields[step].forEach((field: any) => {
           const initialValue = field.type === "checkbox" ? false : "";
           field.setValue(initialValue);
@@ -91,14 +101,14 @@ export const useForm: tUseForm = ({
       //Função de limpeza de campos
       if (clearFields) {
         formFields.forEach((field) => {
-          function resetValue(){
-            switch(field.type){
+          function resetValue() {
+            switch (field.type) {
               case "checkbox":
                 return field.initialValue || false;
               case "checkboxgroup":
-                return field.initialValue || [];  
-              default: 
-                return field.initialValue || "";  
+                return field.initialValue || [];
+              default:
+                return field.initialValue || "";
             }
           }
           const initialValue = resetValue();
