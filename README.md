@@ -2,6 +2,11 @@
 
 ## Notas de atualização
 
+### 1.2.2
+
+- Feat: stepCallbacks (execução de função a cada avanço de etapa)
+- Feat: maxLength para o hook useInput
+
 ### 1.2.1
 
 - Feat: melhorando comportamento de validação
@@ -90,13 +95,14 @@ import { useInput } from "lx-react-form";
 
 const example = useInput({
   name: "example",
+  maxLength: 15,
   validation: "telefone",
   mask: "telefone",
 });
 
 return (
   <form>
-    <input type="text" {...example.inputProps} maxLength="15" />
+    <input type="text" {...example.inputProps} />
     {example.error && <p>{example.error}</p>}
   </form>
 );
@@ -111,6 +117,7 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | initialValue     | Não         | Define um valor inicial para o campo                                                  |
 | same             | Não         | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder    |
 | minLength        | Não         | O número de caracteres mínimo para o respectivo campo                                 |
+| maxLength        | Não         | O número de caracteres máximo para o respectivo campo                                 |
 | validation       | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
 | customValidation | Não         | Permite a utilização de regex próprio para validação                                  |
 | mask             | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
@@ -176,6 +183,8 @@ import { useInput } from "lx-react-form";
 
 const birthDate = useInput({
   name: "birthdate",
+  minLenght: 10,
+  maxLength: 10,
   customMask: {
     expressions: [
       {
@@ -196,7 +205,7 @@ const birthDate = useInput({
 
 return (
   <form>
-    <input type="text" {...birthDate.inputProps} maxLength="10" />
+    <input type="text" {...birthDate.inputProps} />
     {birthDate.error && <p>{birthDate.error}</p>}
   </form>
 );
@@ -550,6 +559,7 @@ return (
 | Opções                | Obrigatório | Descrição                                                                                                                                                                                                                          |
 | --------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | stepFields            | Sim\*       | Um objeto contendo uma lista de campos para cada etapa do formulário                                                                                                                                                               |
+| stepCallbacks         | Sim\*       | Um objeto contendo um função de callback para cada etapa do formulário                                                                                                                                                             |
 | stepMode              | Não         | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos) |
 | stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva                                                                                                                                                                          |
 
