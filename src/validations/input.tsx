@@ -153,6 +153,7 @@ interface iUseInputProps {
 interface iUseInputInputProps {
   value: string;
   name: string;
+  maxLength: string;
   onChange: (event: React.SyntheticEvent) => void;
   onKeyUp: () => void;
   onBlur: () => void;
@@ -265,6 +266,7 @@ export const useInput: tUseInput = (props) => {
     inputProps: {
       value,
       name: props?.name,
+      maxLength: String(props?.maxLength),
       onChange,
       onKeyUp,
       onBlur: () => validate(),
