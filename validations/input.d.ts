@@ -3,18 +3,20 @@ import { iMask, iValidation } from "./types/global";
 interface iInputErrorText {
     required?: string;
     minLength?: string;
+    maxLength?: string;
     same?: string;
 }
 interface iUseInputProps {
     optional?: boolean;
     name: string;
     initialValue?: string;
-    validation?: 'email' | 'cep' | 'senha' | 'telefone';
-    mask?: 'cep' | 'cpf' | 'cnpj' | 'telefone' | 'inteiros';
+    validation?: "email" | "cep" | "senha" | "telefone";
+    mask?: "cep" | "cpf" | "cnpj" | "telefone" | "inteiros";
     customValidation?: iValidation;
     customMask?: iMask;
     same?: string;
     minLength?: number;
+    maxLength?: number;
     errorText?: iInputErrorText;
 }
 interface iUseInputInputProps {

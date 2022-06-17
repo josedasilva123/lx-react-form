@@ -146,7 +146,7 @@ var useInput = function (props) {
      * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
      */
     var validate = function (disabledErrors) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         // Atribui o erro ao estado caso o controle esteja habilitado
         function setValidateError(errorText) {
             if (!disabledErrors) {
@@ -165,21 +165,25 @@ var useInput = function (props) {
             setValidateError(((_b = props.errorText) === null || _b === void 0 ? void 0 : _b.minLength) ||
                 "Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
             return false;
-            // Se o campo não corresponder com o campo relacionado
+            //Se o campo estiver acima do limite de caracteres  
+        }
+        else if ((props === null || props === void 0 ? void 0 : props.maxLength) && value.length > (props === null || props === void 0 ? void 0 : props.maxLength)) {
+            setValidateError(((_c = props.errorText) === null || _c === void 0 ? void 0 : _c.minLength) ||
+                "Este campo precisa conter no m\u00E1ximo ".concat(props === null || props === void 0 ? void 0 : props.maxLength, " digitos."));
+            return false;
+            //Campos com valores correspondentes  
         }
         else if ((props === null || props === void 0 ? void 0 : props.same) && value !== (props === null || props === void 0 ? void 0 : props.same)) {
-            setValidateError(((_c = props.errorText) === null || _c === void 0 ? void 0 : _c.same) || "Os campos não correspondem.");
+            setValidateError(((_d = props.errorText) === null || _d === void 0 ? void 0 : _d.same) || "Os campos não correspondem.");
             return false;
             //Validação de Regex
         }
-        else if ((props === null || props === void 0 ? void 0 : props.validation) &&
-            !((_d = validations[props === null || props === void 0 ? void 0 : props.validation]) === null || _d === void 0 ? void 0 : _d.regex.test(value))) {
+        else if ((props === null || props === void 0 ? void 0 : props.validation) && !((_e = validations[props === null || props === void 0 ? void 0 : props.validation]) === null || _e === void 0 ? void 0 : _e.regex.test(value))) {
             setValidateError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
             return false;
             //Validação de Regex Custom
         }
-        else if ((props === null || props === void 0 ? void 0 : props.customValidation) &&
-            !(props === null || props === void 0 ? void 0 : props.customValidation.regex.test(value))) {
+        else if ((props === null || props === void 0 ? void 0 : props.customValidation) && !(props === null || props === void 0 ? void 0 : props.customValidation.regex.test(value))) {
             setValidateError(props === null || props === void 0 ? void 0 : props.customValidation.error);
             return false;
         }
@@ -489,7 +493,7 @@ var useCheckboxGroup = function (props) {
  * hook para formulários
  */
 var useForm = function (_a) {
-    var formFields = _a.formFields, stepMode = _a.stepMode, stepClearFieldsOnBack = _a.stepClearFieldsOnBack, stepFields = _a.stepFields, clearFields = _a.clearFields, submitCallback = _a.submitCallback;
+    var formFields = _a.formFields, stepMode = _a.stepMode, stepClearFieldsOnBack = _a.stepClearFieldsOnBack, stepFields = _a.stepFields, stepCallbacks = _a.stepCallbacks, clearFields = _a.clearFields, submitCallback = _a.submitCallback;
     var _b = React__namespace.useState(0), step = _b[0], setStep = _b[1];
     var _c = React__namespace.useState(false), canProceed = _c[0], setCanProceed = _c[1];
     if (stepFields) {
@@ -510,8 +514,14 @@ var useForm = function (_a) {
     function nextStep(event) {
         event.preventDefault();
         //Executa todas as validações na etapa atual
-        var validationList = stepFields === null || stepFields === void 0 ? void 0 : stepFields[step].map(function (field) { return field.validate(); });
+        var validationList = stepFields === null || stepFields === void 0 ? void 0 : stepFields[step].map(function (field) {
+            return field.validate();
+        });
         if (validationList.every(function (validation) { return validation; })) {
+            var callback = stepCallbacks === null || stepCallbacks === void 0 ? void 0 : stepCallbacks[step];
+            if (callback) {
+                callback(stepFields === null || stepFields === void 0 ? void 0 : stepFields[step]); //Callback da respectiva etapa
+            }
             setStep(step + 1); //Incrementa a etapa
         }
     }
