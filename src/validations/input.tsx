@@ -1,14 +1,14 @@
 import * as React from "react";
 import { iMask, iValidation } from "./types/global";
 
-interface iValidationList{
+interface iValidationList {
   email: iValidation;
   cep: iValidation;
   senha: iValidation;
   telefone: iValidation;
 }
 
-interface iMaskList{
+interface iMaskList {
   cep: iMask;
   cpf: iMask;
   cnpj: iMask;
@@ -28,7 +28,8 @@ const validations: iValidationList = {
   },
   senha: {
     regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-    error: "A senha precisa ter no mínimo 8 caracteres, pelo menos 1 número, uma 1 letra maiúscula e 1 minúscula.",
+    error:
+      "A senha precisa ter no mínimo 8 caracteres, pelo menos 1 número, uma 1 letra maiúscula e 1 minúscula.",
   },
   telefone: {
     regex: /^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/,
@@ -128,26 +129,28 @@ const masks: iMaskList = {
   },
 };
 
-interface iInputErrorText{
+interface iInputErrorText {
   required?: string;
   minLength?: string;
+  maxLength?: string;
   same?: string;
 }
 
-interface iUseInputProps{
+interface iUseInputProps {
   optional?: boolean;
   name: string;
   initialValue?: string;
-  validation?: 'email' | 'cep' | 'senha' | 'telefone';
-  mask?: 'cep' | 'cpf' | 'cnpj' | 'telefone' | 'inteiros';
+  validation?: "email" | "cep" | "senha" | "telefone";
+  mask?: "cep" | "cpf" | "cnpj" | "telefone" | "inteiros";
   customValidation?: iValidation;
   customMask?: iMask;
   same?: string;
-  minLength?:  number;
+  minLength?: number;
+  maxLength?: number;
   errorText?: iInputErrorText;
 }
 
-interface iUseInputInputProps{
+interface iUseInputInputProps {
   value: string;
   name: string;
   onChange: (event: React.SyntheticEvent) => void;
@@ -155,20 +158,18 @@ interface iUseInputInputProps{
   onBlur: () => void;
 }
 
-interface iUseInputReturn{
+interface iUseInputReturn {
   inputProps: iUseInputInputProps;
-  type: "input",
-  value: string,
+  type: "input";
+  value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   initialValue: string;
-  error: string | null,
+  error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   validate: (disabledErrors?: boolean) => void;
 }
 
-type tUseInput = (
-  props: iUseInputProps,
-) => iUseInputReturn;
+type tUseInput = (props: iUseInputProps) => iUseInputReturn;
 
 /**
  * hook de validação de input (text, email, password)
@@ -180,13 +181,12 @@ export const useInput: tUseInput = (props) => {
 
   React.useEffect(() => {
     if (error) validate();
-  }, [value])
+  }, [value]);
 
   /**
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
    */
   const validate = (disabledErrors?: boolean) => {
-    
     // Atribui o erro ao estado caso o controle esteja habilitado
     function setValidateError(errorText: string) {
       if (!disabledErrors) {
@@ -209,25 +209,29 @@ export const useInput: tUseInput = (props) => {
       );
       return false;
 
-    // Se o campo não corresponder com o campo relacionado
+    //Se o campo estiver acima do limite de caracteres  
+    } else if (props?.maxLength && value.length > props?.maxLength) {
+      setValidateError(
+        props.errorText?.minLength ||
+          `Este campo precisa conter no máximo ${props?.maxLength} digitos.`
+      );
+      return false;
+     
+    //Campos com valores correspondentes  
     } else if (props?.same && value !== props?.same) {
       setValidateError(props.errorText?.same || "Os campos não correspondem.");
       return false;
 
     //Validação de Regex
-    } else if (
-      props?.validation &&
-      !validations[props?.validation]?.regex.test(value)
-    ) {
+    } else if (props?.validation && !validations[props?.validation]?.regex.test(value)) {
       setValidateError(validations[props?.validation].error);
       return false;
+
     //Validação de Regex Custom
-    } else if (
-      props?.customValidation &&
-      !props?.customValidation.regex.test(value)
-    ) {
+    } else if (props?.customValidation && !props?.customValidation.regex.test(value)) {
       setValidateError(props?.customValidation.error);
       return false;
+      
     } else {
       setError(null);
       return true;
@@ -236,7 +240,8 @@ export const useInput: tUseInput = (props) => {
 
   const maskInput = () => {
     if (props?.customMask || props?.mask) {
-      const currentMask = props?.customMask || (props?.mask && masks[props?.mask]);
+      const currentMask =
+        props?.customMask || (props?.mask && masks[props?.mask]);
       let newValue = value;
       currentMask?.expressions.forEach((expression) => {
         newValue = newValue.replace(expression.regex, expression.replace);
@@ -248,7 +253,6 @@ export const useInput: tUseInput = (props) => {
   const onChange = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
     setValue(target.value);
-  
   };
 
   const onKeyUp = () => {
