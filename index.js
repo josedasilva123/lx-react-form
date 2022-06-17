@@ -215,6 +215,7 @@ var useInput = function (props) {
         inputProps: {
             value: value,
             name: props === null || props === void 0 ? void 0 : props.name,
+            maxLength: String(props === null || props === void 0 ? void 0 : props.maxLength),
             onChange: onChange,
             onKeyUp: onKeyUp,
             onBlur: function () { return validate(); },

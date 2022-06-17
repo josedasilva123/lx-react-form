@@ -22,6 +22,7 @@ interface iUseInputProps {
 interface iUseInputInputProps {
     value: string;
     name: string;
+    maxLength: string;
     onChange: (event: React.SyntheticEvent) => void;
     onKeyUp: () => void;
     onBlur: () => void;
