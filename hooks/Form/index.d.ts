@@ -1,9 +1,10 @@
 import * as React from "react";
 interface iUseFormProps {
     formFields: any[];
-    stepMode?: 'onChange';
+    stepMode?: "onChange";
     stepClearFieldsOnBack?: boolean;
     stepFields?: any;
+    stepCallbacks?: any;
     clearFields?: boolean;
     submitCallback: (formData: any) => void;
 }
