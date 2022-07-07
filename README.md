@@ -53,7 +53,7 @@ const name = useInput({
 });
 
 const email = useInput({
-  name: "name",
+  name: "email",
   validation: "email",
 });
 
