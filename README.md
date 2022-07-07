@@ -2,6 +2,11 @@
 
 ## Notas de atualização
 
+### 1.3.0
+
+- Feat: agora é possível validar multiplas vezes um mesmo campo com regex
+- Fix: máscara de CNPJ corrigida
+
 ### 1.2.2
 
 - Feat: stepCallbacks (execução de função a cada avanço de etapa)
@@ -119,7 +124,7 @@ Confira abaixo todas as opções disponíveis para o hook `useInput`
 | minLength        | Não         | O número de caracteres mínimo para o respectivo campo                                 |
 | maxLength        | Não         | O número de caracteres máximo para o respectivo campo                                 |
 | validation       | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
-| customValidation | Não         | Permite a utilização de regex próprio para validação                                  |
+| customValidations | Não         | Permite a utilização de regex próprio para validação                                  |
 | mask             | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
 | customMask       | Não         | Permite o uso de uma máscara customizada                                              |
 | errorText        | Não         | Permite customizar a mensagens de erro de padrão: `required`, `same` e `minLength`    |
@@ -159,11 +164,14 @@ import { useInput } from "lx-react-form";
 
 const password = useInput({
   name: "password",
-  customValidation: {
-    regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-    error:
-      "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número",
-  },
+  customValidations: 
+  [
+    {
+      regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      error:
+        "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número",
+    }
+  ],
 });
 
 return (
