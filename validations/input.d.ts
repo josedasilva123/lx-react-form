@@ -12,7 +12,7 @@ interface iUseInputProps {
     initialValue?: string;
     validation?: "email" | "cep" | "senha" | "telefone";
     mask?: "cep" | "cpf" | "cnpj" | "telefone" | "inteiros";
-    customValidation?: iValidation;
+    customValidations?: iValidation[];
     customMask?: iMask;
     same?: string;
     minLength?: number;

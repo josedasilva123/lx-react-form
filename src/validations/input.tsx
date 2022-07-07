@@ -79,19 +79,19 @@ const masks: iMaskList = {
         replace: "",
       },
       {
-        regex: /^(\d{2})(\d)/,
+        regex: /(\d{2})(\d)/,
         replace: "$1.$2",
       },
       {
-        regex: /^(\d{2})\.(\d{3})(\d)/,
-        replace: "$1.$2.$3",
+        regex: /(\d{3})(\d)/,
+        replace: "$1.$2",
       },
       {
-        regex: /\.(\d{3})(\d)/,
+        regex: /(\d{3})(\d)/,
         replace: "$1/$2",
       },
       {
-        regex: /(\d{4})(\d)/,
+        regex: /(\d{4})(\d{1,2})$/,
         replace: "$1-$2",
       },
     ],
@@ -142,7 +142,7 @@ interface iUseInputProps {
   initialValue?: string;
   validation?: "email" | "cep" | "senha" | "telefone";
   mask?: "cep" | "cpf" | "cnpj" | "telefone" | "inteiros";
-  customValidation?: iValidation;
+  customValidations?: iValidation[];
   customMask?: iMask;
   same?: string;
   minLength?: number;
@@ -195,6 +195,21 @@ export const useInput: tUseInput = (props) => {
       }
     }
 
+    //Função para validar multiplos regex
+    function doCustomValidations(validations: iValidation[]){
+      let validationsErrors: string[] = [];
+      validations.forEach(validation => {
+        if(!validation.regex.test(value)){
+          validationsErrors.push(validation.error);
+        }
+      })
+      if(validationsErrors.length > 0){
+        return validationsErrors;
+      } else {
+        return false;
+      }
+    }
+
     if (props?.optional) return true;
 
     //Se campo estiver vazio
@@ -229,10 +244,10 @@ export const useInput: tUseInput = (props) => {
       return false;
 
     //Validação de Regex Custom
-    } else if (props?.customValidation && !props?.customValidation.regex.test(value)) {
-      setValidateError(props?.customValidation.error);
-      return false;
-      
+    } else if (props?.customValidations && doCustomValidations(props?.customValidations)) {
+      const validationErrors = doCustomValidations(props?.customValidations)
+      setValidateError(validationErrors[0]);
+      return false;      
     } else {
       setError(null);
       return true;

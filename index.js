@@ -82,19 +82,19 @@ var masks$1 = {
                 replace: "",
             },
             {
-                regex: /^(\d{2})(\d)/,
+                regex: /(\d{2})(\d)/,
                 replace: "$1.$2",
             },
             {
-                regex: /^(\d{2})\.(\d{3})(\d)/,
-                replace: "$1.$2.$3",
+                regex: /(\d{3})(\d)/,
+                replace: "$1.$2",
             },
             {
-                regex: /\.(\d{3})(\d)/,
+                regex: /(\d{3})(\d)/,
                 replace: "$1/$2",
             },
             {
-                regex: /(\d{4})(\d)/,
+                regex: /(\d{4})(\d{1,2})$/,
                 replace: "$1-$2",
             },
         ],
@@ -153,6 +153,21 @@ var useInput = function (props) {
                 setError(errorText);
             }
         }
+        //Função para validar multiplos regex
+        function doCustomValidations(validations) {
+            var validationsErrors = [];
+            validations.forEach(function (validation) {
+                if (!validation.regex.test(value)) {
+                    validationsErrors.push(validation.error);
+                }
+            });
+            if (validationsErrors.length > 0) {
+                return validationsErrors;
+            }
+            else {
+                return false;
+            }
+        }
         if (props === null || props === void 0 ? void 0 : props.optional)
             return true;
         //Se campo estiver vazio
@@ -183,8 +198,9 @@ var useInput = function (props) {
             return false;
             //Validação de Regex Custom
         }
-        else if ((props === null || props === void 0 ? void 0 : props.customValidation) && !(props === null || props === void 0 ? void 0 : props.customValidation.regex.test(value))) {
-            setValidateError(props === null || props === void 0 ? void 0 : props.customValidation.error);
+        else if ((props === null || props === void 0 ? void 0 : props.customValidations) && doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations)) {
+            var validationErrors = doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations);
+            setValidateError(validationErrors[0]);
             return false;
         }
         else {
