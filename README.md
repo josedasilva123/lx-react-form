@@ -330,7 +330,7 @@ return (
           type="checkbox"
           value="acao"
           {...categories.inputProps}
-          checked={categories.includes("acao") ? true : false}
+          checked={categories.value.includes("acao") ? true : false}
         />
       </label>
 
@@ -340,7 +340,7 @@ return (
           type="checkbox"
           value="comedia"
           {...categories.inputProps}
-          checked={categories.includes("comedia") ? true : false}
+          checked={categories.value.includes("comedia") ? true : false}
         />
       </label>
 
@@ -350,7 +350,7 @@ return (
           type="checkbox"
           value="drama"
           {...categories.inputProps}
-          checked={categories.includes("drama") ? true : false}
+          checked={categories.value.includes("drama") ? true : false}
         />
       </label>
 
@@ -360,7 +360,7 @@ return (
           type="checkbox"
           value="terror"
           {...categories.inputProps}
-          checked={categories.includes("terror") ? true : false}
+          checked={categories.value.includes("terror") ? true : false}
         />
       </label>
     </div>
