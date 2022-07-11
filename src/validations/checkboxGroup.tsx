@@ -48,7 +48,6 @@ export const useCheckboxGroup: tUseCheckboxGroup = (props) => {
   const maxChecks = props?.max || false;
 
   React.useEffect(() => {
-    //Caso não haja limite máximo
     if (firstChange) {
       if (value.length < minChecks && !maxChecks) {
         setError(
@@ -57,7 +56,6 @@ export const useCheckboxGroup: tUseCheckboxGroup = (props) => {
               minChecks === 1 ? "opção" : "opções"
             }.`
         );
-        //Caso haja limite máximo
       } else if (value.length < minChecks || value.length > maxChecks) {
         setError(
           props?.errorText?.max ||
@@ -73,16 +71,15 @@ export const useCheckboxGroup: tUseCheckboxGroup = (props) => {
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
    */
   const validate = (disabledErrors?: boolean) => {
+    
     if (props?.optional) return true;
 
-    // Atribui o erro ao estado caso o controle esteja habilitado
     function setValidateError(errorText: string) {
       if (!disabledErrors) {
         setError(errorText);
       }
     }
 
-    //Caso não haja limite máximo
     if (value.length < minChecks && !maxChecks) {
       setValidateError(
         props?.errorText?.min ||
@@ -92,7 +89,6 @@ export const useCheckboxGroup: tUseCheckboxGroup = (props) => {
       );
       return false;
 
-      //Caso haja limite máximo
     } else if (value.length < minChecks || value.length > maxChecks) {
       setValidateError(
         props?.errorText?.max ||

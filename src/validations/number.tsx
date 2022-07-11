@@ -100,21 +100,18 @@ export const useNumber: tUseNumber = (props) => {
       setValidateError(props?.errorText?.required || "Preencha um valor.");
       return false;
 
-    //Verica valor mínimo
     } else if (+value.replace(",", ".") < minNumber) {
       setValidateError(
         props?.errorText?.min || `O valor precisar ser no mínimo ${minNumber}.`
       );
       return false;
 
-    //Verifica valor máximo
     } else if (maxNumber && +value.replace(",", ".") > maxNumber) {
       setValidateError(
         props?.errorText?.max || `O valor não pode ultrapassar ${maxNumber}.`
       );
       return false;
-
-    //Validação com regra customizada      
+  
     } else if (props?.customRule && !doCustomRule()){
       setValidateError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
       return false;  

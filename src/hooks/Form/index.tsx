@@ -53,7 +53,7 @@ export const useForm: tUseForm = ({
 
   function nextStep(event: React.SyntheticEvent) {
     event.preventDefault();
-    //Executa todas as validações na etapa atual
+
     const validationList = stepFields?.[step].map((field: any) =>
       field.validate()
     );
@@ -62,10 +62,10 @@ export const useForm: tUseForm = ({
       const callback = stepCallbacks?.[step];
 
       if (callback) {
-        callback(stepFields?.[step]); //Callback da respectiva etapa
+        callback(stepFields?.[step]); 
       }
 
-      setStep(step + 1); //Incrementa a etapa
+      setStep(step + 1); 
     }
   }
 
@@ -78,27 +78,25 @@ export const useForm: tUseForm = ({
           field.setValue(initialValue);
         });
       }
-      setStep(step - 1); //Decrementa a etapa
+      setStep(step - 1); 
     }
   }
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
 
-    //Executa todas as validações
+
     const validationList = formFields.map((field) => field.validate());
 
-    //Verifica se todas as validações são válidas
     if (validationList.every((validation) => validation)) {
-      //Condensa os valores dos campos um objeto data (LX Hook Form)
+
       const formData = formFields.reduce((dataObject, currentItem) => {
         dataObject[currentItem.inputProps.name] = currentItem.value;
         return dataObject;
       }, {});
 
-      submitCallback(formData); //Executa função de callback passando o formData
+      submitCallback(formData); 
 
-      //Função de limpeza de campos
       if (clearFields) {
         formFields.forEach((field) => {
           function resetValue() {
