@@ -1,5 +1,5 @@
 import * as React from "react";
-import { iMask } from "./types/global";
+import { iCustomRule, iMask } from "./types/global";
 
 interface iMaskList {
   inteiros: iMask;
@@ -36,6 +36,7 @@ interface iUseNumberProps {
   name: string;
   initialValue?: string;
   errorText?: iNumberErrorText;
+  customRule?: iCustomRule;
 }
 
 interface iUseNumberInputProps {
@@ -63,21 +64,22 @@ export const useNumber: tUseNumber = (props) => {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    //Caso não haja limite máximo
+  //Caso não haja limite máximo
     if (value) {
-      if(error) validate();
+      if (error) validate();
     }
   }, [value]);
 
   /**
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
    */
+
   function validate(disabledErrors?: boolean) {
     if (props?.optional) return true;
 
     const minNumber = props?.min || 0;
     const maxNumber = props?.max;
-    
+
     // Atribui o erro ao estado caso o controle esteja habilitado
     function setValidateError(errorText: string) {
       if (!disabledErrors) {
@@ -85,24 +87,38 @@ export const useNumber: tUseNumber = (props) => {
       }
     }
 
+    //Regra de validação customizada
+    function doCustomRule(){
+      if(props?.customRule){
+        return props.customRule.callback(value);
+      } else {
+        return true;
+      }
+    }
+
     if (!value) {
       setValidateError(props?.errorText?.required || "Preencha um valor.");
       return false;
 
-      //Verica valor mínimo
+    //Verica valor mínimo
     } else if (+value.replace(",", ".") < minNumber) {
       setValidateError(
         props?.errorText?.min || `O valor precisar ser no mínimo ${minNumber}.`
       );
       return false;
 
-      //Verifica valor máximo
+    //Verifica valor máximo
     } else if (maxNumber && +value.replace(",", ".") > maxNumber) {
       setValidateError(
         props?.errorText?.max || `O valor não pode ultrapassar ${maxNumber}.`
       );
       return false;
 
+    //Validação com regra customizada      
+    } else if (props?.customRule && !doCustomRule()){
+      setValidateError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
+      return false;  
+      
     } else {
       setError(null);
       return true;

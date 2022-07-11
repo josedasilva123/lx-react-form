@@ -1,5 +1,5 @@
 import * as React from "react";
-import { iMask } from "./types/global";
+import { iCustomRule, iMask } from "./types/global";
 interface iNumberErrorText {
     required?: string;
     min?: string;
@@ -14,6 +14,7 @@ interface iUseNumberProps {
     name: string;
     initialValue?: string;
     errorText?: iNumberErrorText;
+    customRule?: iCustomRule;
 }
 interface iUseNumberInputProps {
     value: string;

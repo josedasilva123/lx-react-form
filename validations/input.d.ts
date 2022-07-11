@@ -1,5 +1,5 @@
 import * as React from "react";
-import { iMask, iValidation } from "./types/global";
+import { iCustomRule, iMask, iValidation } from "./types/global";
 interface iInputErrorText {
     required?: string;
     minLength?: string;
@@ -18,6 +18,7 @@ interface iUseInputProps {
     minLength?: number;
     maxLength?: number;
     errorText?: iInputErrorText;
+    customRule?: iCustomRule;
 }
 interface iUseInputInputProps {
     value: string;

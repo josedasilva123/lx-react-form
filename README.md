@@ -2,6 +2,10 @@
 
 ## Notas de atualização
 
+### 1.3.2
+
+- Feat: regra customizada para useInput e useNumber (é possível criar a propria regra de validação)
+
 ### 1.3.0
 
 - Feat: agora é possível validar multiplas vezes um mesmo campo com regex
@@ -115,19 +119,20 @@ return (
 
 Confira abaixo todas as opções disponíveis para o hook `useInput`
 
-| Opções           | Obrigatório | Descrição                                                                             |
-| ---------------- | ----------- | ------------------------------------------------------------------------------------- |
-| name             | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
-| optional         | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
-| initialValue     | Não         | Define um valor inicial para o campo                                                  |
-| same             | Não         | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder    |
-| minLength        | Não         | O número de caracteres mínimo para o respectivo campo                                 |
-| maxLength        | Não         | O número de caracteres máximo para o respectivo campo                                 |
-| validation       | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
+| Opções            | Obrigatório | Descrição                                                                             |
+| ----------------- | ----------- | ------------------------------------------------------------------------------------- |
+| name              | Sim\*       | O nome do campo é essencial para identificação tanto no HTML quanto no hook `useForm` |
+| optional          | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
+| initialValue      | Não         | Define um valor inicial para o campo                                                  |
+| same              | Não         | Permite relacionar campos, para exigir que o valor dos mesmos precise corresponder    |
+| minLength         | Não         | O número de caracteres mínimo para o respectivo campo                                 |
+| maxLength         | Não         | O número de caracteres máximo para o respectivo campo                                 |
+| validation        | Não         | Utiliza uma validação padrão disponível: email, cep, senha, telefone                  |
 | customValidations | Não         | Permite a utilização de regex próprio para validação                                  |
-| mask             | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
-| customMask       | Não         | Permite o uso de uma máscara customizada                                              |
-| errorText        | Não         | Permite customizar a mensagens de erro de padrão: `required`, `same` e `minLength`    |
+| mask              | Não         | Utiliza uma máscara padrão disponível: cep, cpf, cnpj, telefone, inteiros             |
+| customMask        | Não         | Permite o uso de uma máscara customizada                                              |
+| errorText         | Não         | Permite customizar a mensagens de erro de padrão: `required`, `same` e `minLength`    |
+| customRule   | Não         | Objeto contendo função callback com regra customizada e mensagem de erro              |
 
 ### Exemplo same
 
@@ -164,13 +169,12 @@ import { useInput } from "lx-react-form";
 
 const password = useInput({
   name: "password",
-  customValidations: 
-  [
+  customValidations: [
     {
       regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
       error:
         "Sua senha precisa conter 8 caracteres, pelo menos uma letra e um número",
-    }
+    },
   ],
 });
 
@@ -218,6 +222,36 @@ return (
   </form>
 );
 ```
+
+### Exemplo customRule
+
+É possível criar uma regra customizada de validação
+
+```jsx
+import { useInput } from "lx-react-form";
+
+const batatinha = useInput({
+  name: "batatinha",
+  customRule: {
+    callback: (value) => {
+      if(value === "batatinha"){
+        return true;
+      } else {
+        return false;
+      }
+    },
+    error: 'Este campo não é uma batatinha!'
+  }
+});
+
+return (
+  <form>
+    <input type="password" {...password.inputProps} />
+    {password.error && <p>{password.error}</p>}
+  </form>
+);
+```
+
 
 ### Exemplo alterando errorText
 
@@ -275,6 +309,7 @@ Confira todas as opções disponíveis para o hook `useNumber`
 | optional     | Não         | Define se o campo é opcional ou não, padrão `false`.                                  |
 | initialValue | Não         | Define um valor inicial para o campo                                                  |
 | errorText    | Não         | Permite customizar a mensagens de erro de padrão: `required, min e max`               |
+| customRule   | Não         | Objeto contendo função callback com regra customizada e mensagem de erro              |
 
 ## (useCheckbox) - Validações de checkbox (type checkbox)
 
@@ -567,7 +602,7 @@ return (
 | Opções                | Obrigatório | Descrição                                                                                                                                                                                                                          |
 | --------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | stepFields            | Sim\*       | Um objeto contendo uma lista de campos para cada etapa do formulário                                                                                                                                                               |
-| stepCallbacks         | Não      | Um objeto contendo um função de callback para cada etapa do formulário                                                                                                                                                             |
+| stepCallbacks         | Não         | Um objeto contendo um função de callback para cada etapa do formulário                                                                                                                                                             |
 | stepMode              | Não         | No modo onChange, permite que as validações aconteçam (sem notificação de erro) a cada alteração mínima de campo (pode servir para liberar os botões de avançar e enviar somente quando todos os requisitos estiverem preenchidos) |
 | stepClearFieldsOnBack | Não         | A função previousStep limpa os campos da etapa respectiva                                                                                                                                                                          |
 
