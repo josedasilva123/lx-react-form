@@ -213,7 +213,7 @@ var useInput = function (props) {
             return false;
             //Validação com regra customizada  
         }
-        else if (!doCustomRule()) {
+        else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
             setError(((_f = props === null || props === void 0 ? void 0 : props.customRule) === null || _f === void 0 ? void 0 : _f.error) ? (_g = props === null || props === void 0 ? void 0 : props.customRule) === null || _g === void 0 ? void 0 : _g.error : 'Ocorreu um erro!');
             return false;
         }
@@ -652,7 +652,7 @@ var useNumber = function (props) {
             }
         }
         //Regra de validação customizada
-        function getCustomRule() {
+        function doCustomRule() {
             if (props === null || props === void 0 ? void 0 : props.customRule) {
                 return props.customRule.callback(value);
             }
@@ -675,7 +675,7 @@ var useNumber = function (props) {
             return false;
             //Validação com regra customizada      
         }
-        else if (!getCustomRule()) {
+        else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
             setValidateError(((_d = props === null || props === void 0 ? void 0 : props.customRule) === null || _d === void 0 ? void 0 : _d.error) ? (_e = props === null || props === void 0 ? void 0 : props.customRule) === null || _e === void 0 ? void 0 : _e.error : 'Ocorreu um erro!');
             return false;
         }

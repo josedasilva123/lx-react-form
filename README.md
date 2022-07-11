@@ -234,7 +234,7 @@ const batatinha = useInput({
   name: "batatinha",
   customRule: {
     callback: (value) => {
-      if(value === "batinha"){
+      if(value === "batatinha"){
         return true;
       } else {
         return false;

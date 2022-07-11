@@ -261,7 +261,7 @@ export const useInput: tUseInput = (props) => {
       return false;  
 
     //Validação com regra customizada  
-    } else if (!doCustomRule()){
+    } else if (props?.customRule && !doCustomRule()){
       setError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
       return false;
 

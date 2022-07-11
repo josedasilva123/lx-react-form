@@ -88,7 +88,7 @@ export const useNumber: tUseNumber = (props) => {
     }
 
     //Regra de validação customizada
-    function getCustomRule(){
+    function doCustomRule(){
       if(props?.customRule){
         return props.customRule.callback(value);
       } else {
@@ -115,9 +115,10 @@ export const useNumber: tUseNumber = (props) => {
       return false;
 
     //Validação com regra customizada      
-    } else if (!getCustomRule()){
+    } else if (props?.customRule && !doCustomRule()){
       setValidateError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
       return false;  
+      
     } else {
       setError(null);
       return true;
