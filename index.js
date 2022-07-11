@@ -146,7 +146,7 @@ var useInput = function (props) {
      * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
      */
     var validate = function (disabledErrors) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g;
         // Atribui o erro ao estado caso o controle esteja habilitado
         function setValidateError(errorText) {
             if (!disabledErrors) {
@@ -163,6 +163,15 @@ var useInput = function (props) {
             });
             if (validationsErrors.length > 0) {
                 return validationsErrors;
+            }
+            else {
+                return true;
+            }
+        }
+        //Regra de validação customizada
+        function doCustomRule() {
+            if (props === null || props === void 0 ? void 0 : props.customRule) {
+                return props.customRule.callback(value);
             }
             else {
                 return false;
@@ -201,6 +210,11 @@ var useInput = function (props) {
         else if ((props === null || props === void 0 ? void 0 : props.customValidations) && doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations)) {
             var validationErrors = doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations);
             setValidateError(validationErrors[0]);
+            return false;
+            //Validação com regra customizada  
+        }
+        else if (!doCustomRule()) {
+            setError(((_f = props === null || props === void 0 ? void 0 : props.customRule) === null || _f === void 0 ? void 0 : _f.error) ? (_g = props === null || props === void 0 ? void 0 : props.customRule) === null || _g === void 0 ? void 0 : _g.error : 'Ocorreu um erro!');
             return false;
         }
         else {
@@ -626,7 +640,7 @@ var useNumber = function (props) {
      * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
      */
     function validate(disabledErrors) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         if (props === null || props === void 0 ? void 0 : props.optional)
             return true;
         var minNumber = (props === null || props === void 0 ? void 0 : props.min) || 0;
@@ -635,6 +649,15 @@ var useNumber = function (props) {
         function setValidateError(errorText) {
             if (!disabledErrors) {
                 setError(errorText);
+            }
+        }
+        //Regra de validação customizada
+        function getCustomRule() {
+            if (props === null || props === void 0 ? void 0 : props.customRule) {
+                return props.customRule.callback(value);
+            }
+            else {
+                return true;
             }
         }
         if (!value) {
@@ -649,6 +672,11 @@ var useNumber = function (props) {
         }
         else if (maxNumber && +value.replace(",", ".") > maxNumber) {
             setValidateError(((_c = props === null || props === void 0 ? void 0 : props.errorText) === null || _c === void 0 ? void 0 : _c.max) || "O valor n\u00E3o pode ultrapassar ".concat(maxNumber, "."));
+            return false;
+            //Validação com regra customizada      
+        }
+        else if (!getCustomRule()) {
+            setValidateError(((_d = props === null || props === void 0 ? void 0 : props.customRule) === null || _d === void 0 ? void 0 : _d.error) ? (_e = props === null || props === void 0 ? void 0 : props.customRule) === null || _e === void 0 ? void 0 : _e.error : 'Ocorreu um erro!');
             return false;
         }
         else {

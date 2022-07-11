@@ -9,4 +9,8 @@ export interface iValidation {
     regex: RegExp;
     error: string;
 }
+export interface iCustomRule {
+    callback: (props?: any) => void;
+    error: string;
+}
 export {};
