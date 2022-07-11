@@ -205,16 +205,16 @@ var useInput = function (props) {
         else if ((props === null || props === void 0 ? void 0 : props.validation) && !((_e = validations[props === null || props === void 0 ? void 0 : props.validation]) === null || _e === void 0 ? void 0 : _e.regex.test(value))) {
             setValidateError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
             return false;
+            //Validação com regra customizada     
+        }
+        else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
+            setError(((_f = props === null || props === void 0 ? void 0 : props.customRule) === null || _f === void 0 ? void 0 : _f.error) ? (_g = props === null || props === void 0 ? void 0 : props.customRule) === null || _g === void 0 ? void 0 : _g.error : 'Ocorreu um erro!');
+            return false;
             //Validação de Regex Custom
         }
         else if ((props === null || props === void 0 ? void 0 : props.customValidations) && doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations)) {
             var validationErrors = doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations);
             setValidateError(validationErrors[0]);
-            return false;
-            //Validação com regra customizada  
-        }
-        else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
-            setError(((_f = props === null || props === void 0 ? void 0 : props.customRule) === null || _f === void 0 ? void 0 : _f.error) ? (_g = props === null || props === void 0 ? void 0 : props.customRule) === null || _g === void 0 ? void 0 : _g.error : 'Ocorreu um erro!');
             return false;
         }
         else {

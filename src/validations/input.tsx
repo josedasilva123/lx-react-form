@@ -254,16 +254,16 @@ export const useInput: tUseInput = (props) => {
       setValidateError(validations[props?.validation].error);
       return false;
 
+    //Validação com regra customizada     
+    } else if (props?.customRule && !doCustomRule()){
+      setError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
+      return false;
+
     //Validação de Regex Custom
     } else if (props?.customValidations && doCustomValidations(props?.customValidations)) {
       const validationErrors = doCustomValidations(props?.customValidations)
       setValidateError(validationErrors[0]);
-      return false;  
-
-    //Validação com regra customizada  
-    } else if (props?.customRule && !doCustomRule()){
-      setError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
-      return false;
+      return false;   
 
     } else {
       setError(null);
