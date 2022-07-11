@@ -1,5 +1,5 @@
 import * as React from "react";
-import { iMask, iValidation } from "./types/global";
+import { iCustomRule, iMask, iValidation } from "./types/global";
 
 interface iValidationList {
   email: iValidation;
@@ -136,6 +136,7 @@ interface iInputErrorText {
   same?: string;
 }
 
+
 interface iUseInputProps {
   optional?: boolean;
   name: string;
@@ -148,6 +149,7 @@ interface iUseInputProps {
   minLength?: number;
   maxLength?: number;
   errorText?: iInputErrorText;
+  customRule?: iCustomRule;
 }
 
 interface iUseInputInputProps {
@@ -206,6 +208,15 @@ export const useInput: tUseInput = (props) => {
       if(validationsErrors.length > 0){
         return validationsErrors;
       } else {
+        return true;
+      }
+    }
+
+    //Regra de validação customizada
+    function doCustomRule(){
+      if(props?.customRule){
+        return props.customRule.callback(value);
+      } else {
         return false;
       }
     }
@@ -247,7 +258,13 @@ export const useInput: tUseInput = (props) => {
     } else if (props?.customValidations && doCustomValidations(props?.customValidations)) {
       const validationErrors = doCustomValidations(props?.customValidations)
       setValidateError(validationErrors[0]);
-      return false;      
+      return false;  
+
+    //Validação com regra customizada  
+    } else if (!doCustomRule()){
+      setError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
+      return false;
+
     } else {
       setError(null);
       return true;
