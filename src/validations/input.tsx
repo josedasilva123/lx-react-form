@@ -188,16 +188,16 @@ export const useInput: tUseInput = (props) => {
 
   /**
    * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
-   */
+  */
+
   const validate = (disabledErrors?: boolean) => {
-    // Atribui o erro ao estado caso o controle esteja habilitado
+
     function setValidateError(errorText: string) {
       if (!disabledErrors) {
         setError(errorText);
       }
     }
 
-    //Função para validar multiplos regex
     function doCustomValidations(validations: iValidation[]){
       let validationsErrors: string[] = [];
       validations.forEach(validation => {
@@ -212,7 +212,6 @@ export const useInput: tUseInput = (props) => {
       }
     }
 
-    //Regra de validação customizada
     function doCustomRule(){
       if(props?.customRule){
         return props.customRule.callback(value);
@@ -223,20 +222,17 @@ export const useInput: tUseInput = (props) => {
 
     if (props?.optional) return true;
 
-    //Se campo estiver vazio
     if (value.length === 0) {
       setValidateError(props.errorText?.required || "Preencha um valor.");
       return false;
 
-    //Se campo estiver abaixo do mínimo de caracteres
     } else if (props?.minLength && value.length < props?.minLength) {
       setValidateError(
         props.errorText?.minLength ||
           `Este campo precisa conter pelo menos ${props?.minLength} digitos.`
       );
       return false;
-
-    //Se o campo estiver acima do limite de caracteres  
+ 
     } else if (props?.maxLength && value.length > props?.maxLength) {
       setValidateError(
         props.errorText?.minLength ||
@@ -244,22 +240,18 @@ export const useInput: tUseInput = (props) => {
       );
       return false;
      
-    //Campos com valores correspondentes  
     } else if (props?.same && value !== props?.same) {
       setValidateError(props.errorText?.same || "Os campos não correspondem.");
       return false;
 
-    //Validação de Regex
     } else if (props?.validation && !validations[props?.validation]?.regex.test(value)) {
       setValidateError(validations[props?.validation].error);
       return false;
-
-    //Validação com regra customizada     
+  
     } else if (props?.customRule && !doCustomRule()){
       setError(props?.customRule?.error ? props?.customRule?.error : 'Ocorreu um erro!')
       return false;
 
-    //Validação de Regex Custom
     } else if (props?.customValidations && doCustomValidations(props?.customValidations)) {
       const validationErrors = doCustomValidations(props?.customValidations)
       setValidateError(validationErrors[0]);
