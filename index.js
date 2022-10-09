@@ -144,16 +144,14 @@ var useInput = function (props) {
     }, [value]);
     /**
      * @param {boolean} disabledErrors - desabilitada a notificação de erro (ainda bloqueia o envio)
-     */
+    */
     var validate = function (disabledErrors) {
         var _a, _b, _c, _d, _e, _f, _g;
-        // Atribui o erro ao estado caso o controle esteja habilitado
         function setValidateError(errorText) {
             if (!disabledErrors) {
                 setError(errorText);
             }
         }
-        //Função para validar multiplos regex
         function doCustomValidations(validations) {
             var validationsErrors = [];
             validations.forEach(function (validation) {
@@ -165,10 +163,9 @@ var useInput = function (props) {
                 return validationsErrors;
             }
             else {
-                return true;
+                return false;
             }
         }
-        //Regra de validação customizada
         function doCustomRule() {
             if (props === null || props === void 0 ? void 0 : props.customRule) {
                 return props.customRule.callback(value);
@@ -179,38 +176,31 @@ var useInput = function (props) {
         }
         if (props === null || props === void 0 ? void 0 : props.optional)
             return true;
-        //Se campo estiver vazio
         if (value.length === 0) {
             setValidateError(((_a = props.errorText) === null || _a === void 0 ? void 0 : _a.required) || "Preencha um valor.");
             return false;
-            //Se campo estiver abaixo do mínimo de caracteres
         }
         else if ((props === null || props === void 0 ? void 0 : props.minLength) && value.length < (props === null || props === void 0 ? void 0 : props.minLength)) {
             setValidateError(((_b = props.errorText) === null || _b === void 0 ? void 0 : _b.minLength) ||
                 "Este campo precisa conter pelo menos ".concat(props === null || props === void 0 ? void 0 : props.minLength, " digitos."));
             return false;
-            //Se o campo estiver acima do limite de caracteres  
         }
         else if ((props === null || props === void 0 ? void 0 : props.maxLength) && value.length > (props === null || props === void 0 ? void 0 : props.maxLength)) {
             setValidateError(((_c = props.errorText) === null || _c === void 0 ? void 0 : _c.minLength) ||
                 "Este campo precisa conter no m\u00E1ximo ".concat(props === null || props === void 0 ? void 0 : props.maxLength, " digitos."));
             return false;
-            //Campos com valores correspondentes  
         }
         else if ((props === null || props === void 0 ? void 0 : props.same) && value !== (props === null || props === void 0 ? void 0 : props.same)) {
             setValidateError(((_d = props.errorText) === null || _d === void 0 ? void 0 : _d.same) || "Os campos não correspondem.");
             return false;
-            //Validação de Regex
         }
         else if ((props === null || props === void 0 ? void 0 : props.validation) && !((_e = validations[props === null || props === void 0 ? void 0 : props.validation]) === null || _e === void 0 ? void 0 : _e.regex.test(value))) {
             setValidateError(validations[props === null || props === void 0 ? void 0 : props.validation].error);
             return false;
-            //Validação com regra customizada     
         }
         else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
             setError(((_f = props === null || props === void 0 ? void 0 : props.customRule) === null || _f === void 0 ? void 0 : _f.error) ? (_g = props === null || props === void 0 ? void 0 : props.customRule) === null || _g === void 0 ? void 0 : _g.error : 'Ocorreu um erro!');
             return false;
-            //Validação de Regex Custom
         }
         else if ((props === null || props === void 0 ? void 0 : props.customValidations) && doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations)) {
             var validationErrors = doCustomValidations(props === null || props === void 0 ? void 0 : props.customValidations);
@@ -445,12 +435,10 @@ var useCheckboxGroup = function (props) {
     var maxChecks = (props === null || props === void 0 ? void 0 : props.max) || false;
     React__namespace.useEffect(function () {
         var _a, _b;
-        //Caso não haja limite máximo
         if (firstChange) {
             if (value.length < minChecks && !maxChecks) {
                 setError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.min) ||
                     "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " ").concat(minChecks === 1 ? "opção" : "opções", "."));
-                //Caso haja limite máximo
             }
             else if (value.length < minChecks || value.length > maxChecks) {
                 setError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.max) ||
@@ -465,18 +453,15 @@ var useCheckboxGroup = function (props) {
         var _a, _b;
         if (props === null || props === void 0 ? void 0 : props.optional)
             return true;
-        // Atribui o erro ao estado caso o controle esteja habilitado
         function setValidateError(errorText) {
             if (!disabledErrors) {
                 setError(errorText);
             }
         }
-        //Caso não haja limite máximo
         if (value.length < minChecks && !maxChecks) {
             setValidateError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.min) ||
                 "Voc\u00EA precisa selecionar pelo menos ".concat(minChecks, " ").concat(minChecks === 1 ? "opção" : "opções", "."));
             return false;
-            //Caso haja limite máximo
         }
         else if (value.length < minChecks || value.length > maxChecks) {
             setValidateError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.max) ||
@@ -544,16 +529,15 @@ var useForm = function (_a) {
     }
     function nextStep(event) {
         event.preventDefault();
-        //Executa todas as validações na etapa atual
         var validationList = stepFields === null || stepFields === void 0 ? void 0 : stepFields[step].map(function (field) {
             return field.validate();
         });
         if (validationList.every(function (validation) { return validation; })) {
             var callback = stepCallbacks === null || stepCallbacks === void 0 ? void 0 : stepCallbacks[step];
             if (callback) {
-                callback(stepFields === null || stepFields === void 0 ? void 0 : stepFields[step]); //Callback da respectiva etapa
+                callback(stepFields === null || stepFields === void 0 ? void 0 : stepFields[step]);
             }
-            setStep(step + 1); //Incrementa a etapa
+            setStep(step + 1);
         }
     }
     function previousStep(event) {
@@ -565,22 +549,18 @@ var useForm = function (_a) {
                     field.setValue(initialValue);
                 });
             }
-            setStep(step - 1); //Decrementa a etapa
+            setStep(step - 1);
         }
     }
     function handleSubmit(event) {
         event.preventDefault();
-        //Executa todas as validações
         var validationList = formFields.map(function (field) { return field.validate(); });
-        //Verifica se todas as validações são válidas
         if (validationList.every(function (validation) { return validation; })) {
-            //Condensa os valores dos campos um objeto data (LX Hook Form)
             var formData = formFields.reduce(function (dataObject, currentItem) {
                 dataObject[currentItem.inputProps.name] = currentItem.value;
                 return dataObject;
             }, {});
-            submitCallback(formData); //Executa função de callback passando o formData
-            //Função de limpeza de campos
+            submitCallback(formData);
             if (clearFields) {
                 formFields.forEach(function (field) {
                     function resetValue() {
@@ -663,17 +643,14 @@ var useNumber = function (props) {
         if (!value) {
             setValidateError(((_a = props === null || props === void 0 ? void 0 : props.errorText) === null || _a === void 0 ? void 0 : _a.required) || "Preencha um valor.");
             return false;
-            //Verica valor mínimo
         }
         else if (+value.replace(",", ".") < minNumber) {
             setValidateError(((_b = props === null || props === void 0 ? void 0 : props.errorText) === null || _b === void 0 ? void 0 : _b.min) || "O valor precisar ser no m\u00EDnimo ".concat(minNumber, "."));
             return false;
-            //Verifica valor máximo
         }
         else if (maxNumber && +value.replace(",", ".") > maxNumber) {
             setValidateError(((_c = props === null || props === void 0 ? void 0 : props.errorText) === null || _c === void 0 ? void 0 : _c.max) || "O valor n\u00E3o pode ultrapassar ".concat(maxNumber, "."));
             return false;
-            //Validação com regra customizada      
         }
         else if ((props === null || props === void 0 ? void 0 : props.customRule) && !doCustomRule()) {
             setValidateError(((_d = props === null || props === void 0 ? void 0 : props.customRule) === null || _d === void 0 ? void 0 : _d.error) ? (_e = props === null || props === void 0 ? void 0 : props.customRule) === null || _e === void 0 ? void 0 : _e.error : 'Ocorreu um erro!');

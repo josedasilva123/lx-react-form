@@ -2,6 +2,10 @@
 
 ## Notas de atualização
 
+### 1.3.4
+
+- Fix: arrumando problema em custom validations
+
 ### 1.3.2
 
 - Feat: regra customizada para useInput e useNumber (é possível criar a propria regra de validação)

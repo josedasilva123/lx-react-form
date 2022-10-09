@@ -57,7 +57,7 @@ const masks: iMaskList = {
         regex: /\D/g,
         replace: "",
       },
-      {
+      { 
         regex: /(\d{3})(\d)/,
         replace: "$1.$2",
       },
@@ -208,7 +208,7 @@ export const useInput: tUseInput = (props) => {
       if(validationsErrors.length > 0){
         return validationsErrors;
       } else {
-        return true;
+        return false;
       }
     }
 
