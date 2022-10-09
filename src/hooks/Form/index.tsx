@@ -71,6 +71,7 @@ export const useForm: tUseForm = ({
 
   function previousStep(event: React.SyntheticEvent) {
     event.preventDefault();
+    
     if (step > 0) {
       if (stepClearFieldsOnBack) {
         stepFields[step].forEach((field: any) => {
@@ -84,7 +85,6 @@ export const useForm: tUseForm = ({
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-
 
     const validationList = formFields.map((field) => field.validate());
 
