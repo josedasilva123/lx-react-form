@@ -2,6 +2,10 @@
 
 ## Notas de atualização
 
+### 1.3.5
+
+- Fix: arrumando tipagem do maxLength
+
 ### 1.3.4
 
 - Fix: arrumando problema em custom validations
